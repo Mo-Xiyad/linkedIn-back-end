@@ -130,14 +130,15 @@ const createExperience = async (req, res, next) => {
 //GETS A SPECIFIC EXPERIENCE
 const getExperienceById = async (req, res, next) => {
   try {
+    const userId = req.params.userId;
+    const experienceId = req.params.experienceId;
 
-    const userId = req.params.userId
-    const experienceId = req.params.experienceId
-
-    const user = await UserModel.findById(userId)
+    const user = await UserModel.findById(userId);
     if (user) {
-      const foundExperience = post.experience.find(exp => exp._id.toString() === experienceId)
-      res.send(foundExperience)
+      const foundExperience = post.experience.find(
+        (exp) => exp._id.toString() === experienceId
+      );
+      res.send(foundExperience);
     } else {
       next(createHttpError(404, `User with the ID:  ${id} not found!`));
     }
@@ -147,61 +148,64 @@ const getExperienceById = async (req, res, next) => {
   }
 };
 
-
 //UPDATES AN EXPERIENCE WITH A USER ID
 
 const updateExperienceById = async (req, res, next) => {
   try {
-    const userId = req.params.userId
-    const experienceId = req.params.experienceId
-    const user = await UserModel.findById(userId)
+    const userId = req.params.userId;
+    const experienceId = req.params.experienceId;
+    const user = await UserModel.findById(userId);
 
     if (user) {
-      const index = user.experience.findIndex(i => i._id.toString() === experienceId)
-      console.log(index)
+      const index = user.experience.findIndex(
+        (i) => i._id.toString() === experienceId
+      );
+      console.log(index);
 
       if (index !== -1) {
-        console.log(user.experience[index])
-        user.experience[index] = { ...user.experience[index].toObject(), ...req.body }
-        await user.save()
-        res.send(user)
+        console.log(user.experience[index]);
+        user.experience[index] = {
+          ...user.experience[index].toObject(),
+          ...req.body,
+        };
+        await user.save();
+        res.send(user);
       } else {
-        next(createHttpError(404, `Experience with id: ${experienceId} not found!`))
+        next(
+          createHttpError(404, `Experience with id: ${experienceId} not found!`)
+        );
       }
-      
     } else {
-      next(createHttpError(404, `User with id:  ${userId} not found!`))
+      next(createHttpError(404, `User with id:  ${userId} not found!`));
     }
-
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
 //DELETES A SPECIFIC EXPERIENCE WITH A USER ID
 
 const deleteExperienceById = async (req, res, next) => {
   try {
-    const userId = req.params.userId
-    const experienceId = req.params.experienceId
+    const userId = req.params.userId;
+    const experienceId = req.params.experienceId;
 
     const updatedExperience = await UserModel.findByIdAndUpdate(
       userId,
       { $pull: { experience: { _id: experienceId } } },
       { new: true }
-    )
+    );
     if (updatedExperience) {
-      res.send(updatedExperience)
+      res.send(updatedExperience);
     } else {
-      next(createHttpError(404, `Experience with id ${experienceId} not found!`))
+      next(
+        createHttpError(404, `Experience with id ${experienceId} not found!`)
+      );
     }
   } catch (error) {
-    next(error)
+    next(error);
   }
-
-}
-
-
+};
 
 /* ---------------------------------------------------- EDUCATION ---------------------------------------------------- */
 
@@ -243,6 +247,27 @@ const createEducation = async (req, res, next) => {
   }
 };
 
+//GETS A SPECIFIC INSTANCE OF EDUCATION
+const getEducationById = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const experienceId = req.params.experienceId;
+
+    const user = await UserModel.findById(userId);
+    if (user) {
+      const foundExperience = post.experience.find(
+        (exp) => exp._id.toString() === experienceId
+      );
+      res.send(foundExperience);
+    } else {
+      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const handler = {
   getUsers,
   createUsers,
@@ -254,7 +279,10 @@ const handler = {
   getEducation, //done
   createEducation, //done
   getExperienceById, //done
-updateExperienceById, //done
-deleteExperienceById, //done 
+  updateExperienceById, //done
+  deleteExperienceById, //done
+  getEducationById,
+  updateEducationById,
+  deleteEducationById,
 };
 export default handler;

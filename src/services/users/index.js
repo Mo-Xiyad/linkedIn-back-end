@@ -19,14 +19,14 @@ router
   .post(handler.createEducation)
 //EXPERIENCE endpoints
 router
-  .route(`/:userId/experience`)
+  .route(`/:userId/experience/:experienceId`)
   .get(handler.getExperienceById)
   .put(handler.updateExperienceById)
   .delete(handler.deleteExperienceById);
 //EDUCATION ENDPOINTS
 router
-  .route(`/:userId/experience`)
-  .get(handler.getExperienceById)
-  .put(handler.updateExperienceById)
-  .delete(handler.deleteExperienceById);
+  .route(`/:userId/education/:educationId`)
+  .get(handler.getEducationById)
+  .put(handler.updateEducationById)
+  .delete(handler.deleteEducationById);
 export default router;
