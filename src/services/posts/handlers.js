@@ -84,6 +84,13 @@ const updatePostsById = async (req, res, next) => {
 };
 const deletePostsById = async (req, res, next) => {
   try {
+    const id = req.params.postId;
+    const deletePost = await PostModel.findByIdAndDelete(id);
+    if (deletePost) {
+      res.status(204).send();
+    } else {
+      next(createHttpError(404, `Post with id ${id} not found`));
+    }
   } catch (error) {
     console.log(error);
     next(error);
