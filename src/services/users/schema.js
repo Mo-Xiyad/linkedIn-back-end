@@ -60,24 +60,28 @@ const UserModel = new Schema(
       type: String,
       required: true,
     },
-    // experience: [{
-    //     role : {type: String, required: true},
-    //     company : {type: String, required: true},
-    //     description : {type: String, required: true},
-    //     area : {type: String, required: true},
-    //     startDate : {type: Date, required: true},
-    //     endDate : {type: Date},
-    //     image: {type: String}
-    // }],
-    // education: [{
-    //     school : {type: String, required: true},
-    //     fieldOfStudy : {type: String, required: true},
-    //     activities : {type: String, required: true},
-    //     description : {type: String, required: true},
-    //     startDate : {type: Date, required: true},
-    //     endDate : {type: Date},
-    //     image: {type: String}
-    // }],
+    experience: [
+      {
+        role: { type: String, required: true },
+        company: { type: String, required: true },
+        description: { type: String, required: true },
+        area: { type: String, required: true },
+        startDate: { type: Date, required: true },
+        endDate: { type: Date },
+        image: { type: String },
+      },
+    ],
+    education: [
+      {
+        school: { type: String, required: true },
+        fieldOfStudy: { type: String, required: true },
+        activities: { type: String, required: true },
+        description: { type: String, required: true },
+        startDate: { type: Date, required: true },
+        endDate: { type: Date },
+        image: { type: String },
+      },
+    ],
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   },
   {
