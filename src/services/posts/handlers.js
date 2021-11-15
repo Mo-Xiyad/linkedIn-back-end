@@ -1,5 +1,9 @@
+import PostModel from "./schema.js";
+
 const getPosts = async (req, res, next) => {
   try {
+    const post = await PostModel.find().populate({ path: "user" });
+    res.send(post);
   } catch (error) {
     console.log(error);
     next(error);
@@ -7,6 +11,9 @@ const getPosts = async (req, res, next) => {
 };
 const createPosts = async (req, res, next) => {
   try {
+    const newPost = new PostModel(req.body);
+    const post = await newPost.save();
+    res.send(post);
   } catch (error) {
     console.log(error);
     next(error);
