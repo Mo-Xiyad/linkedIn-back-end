@@ -251,19 +251,55 @@ const createEducation = async (req, res, next) => {
 const getEducationById = async (req, res, next) => {
   try {
     const userId = req.params.userId;
-    const experienceId = req.params.experienceId;
+    const educationId = req.params.educationId;
 
     const user = await UserModel.findById(userId);
     if (user) {
-      const foundExperience = post.experience.find(
-        (exp) => exp._id.toString() === experienceId
+      const foundEducation = post.education.find(
+        (exp) => exp._id.toString() === educationId
       );
-      res.send(foundExperience);
+      res.send(foundEducation);
     } else {
       next(createHttpError(404, `User with the ID:  ${id} not found!`));
     }
   } catch (error) {
     console.log(error);
+    next(error);
+  }
+};
+
+
+//UPDATES AN INSTANCE OF EDUCATION BY ID
+
+const updateEducationById = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const educationId = req.params.ecucationId;
+    const user = await UserModel.findById(userId);
+
+    if (user) {
+      const index = user.ecucation.findIndex(
+        (i) => i._id.toString() === educationId
+      );
+      console.log(index);
+
+      if (index !== -1) {
+        console.log(user.education[index]);
+        user.education[index] = {
+          ...user.education[index].toObject(),
+          ...req.body,
+        };
+        await user.save();
+        res.send(user);
+      } else {
+        next(
+          createHttpError(404, `Experience with id: ${experienceId} not found!`)
+        );
+      }
+    } else {
+      next(createHttpError(404, `User with id:  ${userId} not found!`));
+    }
+  } catch (error) {
     next(error);
   }
 };
@@ -281,7 +317,7 @@ const handler = {
   getExperienceById, //done
   updateExperienceById, //done
   deleteExperienceById, //done
-  getEducationById,
+  getEducationById, //Done
   updateEducationById,
   deleteEducationById,
 };
