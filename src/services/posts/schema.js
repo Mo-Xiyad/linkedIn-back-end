@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const postSchema = new Schema(
   {
     text: { type: String },
-    username: { type: String, default: "user.name", enum: ["user.name"] },
+    username: { type: String, default: "admin" },
     user: {
       type: Schema.Types.ObjectId,
       required: true,
@@ -14,8 +14,14 @@ const postSchema = new Schema(
       type: String,
       required: true,
       default: "https://source.unsplash.com/1600x900/?portrait",
-      enum: ["https://source.unsplash.com/1600x900/?portrait"],
+      // enum: ["https://source.unsplash.com/1600x900/?portrait"],
     },
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+      },
+    ],
+    likes: [],
   },
   {
     timestamps: true,
