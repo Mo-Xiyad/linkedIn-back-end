@@ -53,7 +53,6 @@ const UserModel = new Schema({
     },
     bio: {
         type: String,
-        required: true
     },
     image: {
         type: String,
