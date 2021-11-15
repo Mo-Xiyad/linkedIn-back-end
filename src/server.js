@@ -10,7 +10,7 @@ import CommentsRouter from "./services/comments/index.js";
 const { MONGO_CONNECTION, PORT } = process.env;
 
 const server = express();
-const port = PORT || 3001;
+const port = process.env.PORT || 3001;
 
 // ******************************** MIDDLEWARE ********************************
 server.use(cors());
