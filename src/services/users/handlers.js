@@ -88,74 +88,104 @@ const deleteUsersById = async (req, res, next) => {
 
 //CRUD FOR EXPERIENCE AND EDUCATION
 
-
 /* ---------------------------------------------------- EXPERIENCE ---------------------------------------------------- */
 //Gets all experience from a single user
 const getExperience = async (req, res, next) => {
   try {
-    const id = req.params.postId
+    const id = req.params.postId;
 
-    const user = await UserModel.findById(id)
-      if (user) {
-  res.send(user.experience)
-} else {
-  next(createHttpError(404, `User with the ID:  ${id} not found!`))
-  } 
-}catch (error) {
+    const user = await UserModel.findById(id);
+    if (user) {
+      res.send(user.experience);
+    } else {
+      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+    }
+  } catch (error) {
     console.log(error);
     next(error);
-  }};
+  }
+};
 
-  //CREATES A NEW EXPERIENCE
-  const createExperience = async (req, res, next) => {
-    try {
-      const id = req.params.postId
-      const user = await UserModel.findById(id)
-        if (user) {
-          const addExperience = findByIdAndUpdate(id, {$push: {experience: req.body}}, {new: true})
-    res.send(addExperience)
-  } else {
-    next(createHttpError(404, `User with the ID:  ${id} not found!`))
-    } 
-  }catch (error) {
-      console.log(error);
-      next(error);
-    }};
-
-  /* ---------------------------------------------------- EDUCATION ---------------------------------------------------- */
-
-  //Gets all education
-  const getEducation = async (req, res, next) => {
-    try {
-      const id = req.params.postId
-  
-      const user = await UserModel.findById(id)
-        if (user) {
-    res.send(user.education)
-  } else {
-    next(createHttpError(404, `User with the ID:  ${id} not found!`))
-    } 
-  }catch (error) {
-      console.log(error);
-      next(error);
-    }};
-
-    //Creates a new instance of Education
-    const createEducation = async (req, res, next) => {
-      try {
-        const id = req.params.postId
-        const user = await UserModel.findById(id)
-          if (user) {
-            const addEducation = findByIdAndUpdate(id, {$push: {education: req.body}}, {new: true})
-      res.send(addEducation)
+//CREATES A NEW EXPERIENCE
+const createExperience = async (req, res, next) => {
+  try {
+    const id = req.params.postId;
+    const user = await UserModel.findById(id);
+    if (user) {
+      const addExperience = findByIdAndUpdate(
+        id,
+        { $push: { experience: req.body } },
+        { new: true }
+      );
+      res.send(addExperience);
     } else {
-      next(createHttpError(404, `User with the ID:  ${id} not found!`))
-      } 
-    }catch (error) {
-        console.log(error);
-        next(error);
-      }};
-  
+      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+//GETS A SPECIFIC EXPERIENCE
+const getExperienceById = async (req, res, next) => {
+  try {
+
+    const userId = req.params.userId
+    const experienceId = req.params.experienceId
+
+    const user = await UserModel.findById(userId)
+    if (user) {
+      const foundExperience = post.experience.find(exp => exp._id.toString() === experienceId)
+      res.send(foundExperience)
+    } else {
+      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+/* ---------------------------------------------------- EDUCATION ---------------------------------------------------- */
+
+//Gets all education
+const getEducation = async (req, res, next) => {
+  try {
+    const id = req.params.postId;
+
+    const user = await UserModel.findById(id);
+    if (user) {
+      res.send(user.education);
+    } else {
+      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+//Creates a new instance of Education
+const createEducation = async (req, res, next) => {
+  try {
+    const id = req.params.postId;
+    const user = await UserModel.findById(id);
+    if (user) {
+      const addEducation = findByIdAndUpdate(
+        id,
+        { $push: { education: req.body } },
+        { new: true }
+      );
+      res.send(addEducation);
+    } else {
+      next(createHttpError(404, `User with the ID: ${id} not found!`));
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 
 const handler = {
   getUsers,
@@ -163,9 +193,12 @@ const handler = {
   getUsersById,
   updateUsersById,
   deleteUsersById,
-  getExperience,//done
-  createExperience,
-  getEducation,
-  createEducation,
+  getExperience, //done
+  createExperience, //done
+  getEducation, //done
+  createEducation, //done
+  getExperienceById,
+updateExperienceById,
+deleteExperienceById,
 };
 export default handler;
