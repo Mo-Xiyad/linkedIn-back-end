@@ -1,5 +1,10 @@
+import PostModel from "./schema.js";
+import UserModel from "../users/schema.js";
+
 const getPosts = async (req, res, next) => {
   try {
+    const post = await PostModel.find().populate({ path: "user" });
+    res.send(post);
   } catch (error) {
     console.log(error);
     next(error);
@@ -7,6 +12,15 @@ const getPosts = async (req, res, next) => {
 };
 const createPosts = async (req, res, next) => {
   try {
+    const newPost = new PostModel(req.body);
+
+    const { _id } = await newPost.save();
+    const findUser = await UserModel.findByIdAndUpdate(
+      req.body.user,
+      { $push: { posts: _id } },
+      { new: true }
+    );
+    res.send({ _id });
   } catch (error) {
     console.log(error);
     next(error);
