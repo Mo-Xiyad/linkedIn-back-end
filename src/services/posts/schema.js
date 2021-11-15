@@ -1,6 +1,15 @@
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
+const comment = new Schema(
+  {
+    comment: { type: String, required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+    post: { type: Schema.Types.ObjectId, ref: "Post" },
+  },
+  { timeStamps: true }
+);
+
 const postSchema = new Schema(
   {
     text: { type: String },
@@ -16,11 +25,9 @@ const postSchema = new Schema(
       default: "https://source.unsplash.com/1600x900/?portrait",
       // enum: ["https://source.unsplash.com/1600x900/?portrait"],
     },
-    comments: [
-      {
-        type: Schema.Types.ObjectId,
-      },
-    ],
+    comments: {
+      type: [comment],
+    },
     likes: [],
   },
   {

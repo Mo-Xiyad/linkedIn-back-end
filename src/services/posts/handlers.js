@@ -7,11 +7,16 @@ const getPosts = async (req, res, next) => {
   try {
     const mongoQuery = q2m(req.query);
     const totalPosts = await PostModel.countDocuments(mongoQuery.criteria);
-    const post = await PostModel.find(mongoQuery.criteria)
+    const post = await PostModel.find(mongoQuery.criteria, {
+      __v: 0,
+    })
       .limit(mongoQuery.options.limit)
       .skip(mongoQuery.options.skip)
       .sort(mongoQuery.options.sort)
-      .populate({ path: "user comments" });
+      .populate({
+        path: "user",
+        select: "_id name surname email bio image username",
+      });
 
     if (post) {
       res.send({
@@ -46,6 +51,12 @@ const createPosts = async (req, res, next) => {
 };
 const getPostsById = async (req, res, next) => {
   try {
+    const id = req.params.postId;
+    const post = await PostModel.findById(id, {}).populate({
+      path: "user",
+      select: "_id name surname email bio image username",
+    });
+    res.send(post);
   } catch (error) {
     console.log(error);
     next(error);
@@ -53,6 +64,19 @@ const getPostsById = async (req, res, next) => {
 };
 const updatePostsById = async (req, res, next) => {
   try {
+    const id = req.params.postId;
+    if (id) {
+      const updatedPost = await PostModel.findByIdAndUpdate(id, req.body, {
+        new: true,
+      });
+      if (updatedPost) {
+        res.send(updatedPost);
+      } else {
+        next(createHttpError(304, `Post with id ${id} could not be modified`));
+      }
+    } else {
+      next(createHttpError(404, `Post with id ${id} not found`));
+    }
   } catch (error) {
     console.log(error);
     next(error);
