@@ -178,6 +178,29 @@ const updateExperienceById = async (req, res, next) => {
   }
 }
 
+//DELETES A SPECIFIC EXPERIENCE WITH A USER ID
+
+const deleteExperienceById = async (req, res, next) => {
+  try {
+    const userId = req.params.userId
+    const experienceId = req.params.experienceId
+
+    const updatedExperience = await UserModel.findByIdAndUpdate(
+      userId,
+      { $pull: { experience: { _id: experienceId } } },
+      { new: true }
+    )
+    if (updatedExperience) {
+      res.send(updatedExperience)
+    } else {
+      next(createHttpError(404, `Experience with id ${experienceId} not found!`))
+    }
+  } catch (error) {
+    next(error)
+  }
+
+}
+
 
 
 /* ---------------------------------------------------- EDUCATION ---------------------------------------------------- */
@@ -231,7 +254,7 @@ const handler = {
   getEducation, //done
   createEducation, //done
   getExperienceById, //done
-updateExperienceById,
-deleteExperienceById,
+updateExperienceById, //done
+deleteExperienceById, //done 
 };
 export default handler;
