@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
+// ******************************* COMMENTS EMBEDDING *******************************
 const comment = new Schema(
   {
     comment: { type: String, required: true },
@@ -9,7 +10,7 @@ const comment = new Schema(
   },
   { timeStamps: true }
 );
-
+// **************************************************************
 const postSchema = new Schema(
   {
     text: { type: String },
