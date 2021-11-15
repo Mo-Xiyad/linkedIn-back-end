@@ -1,5 +1,6 @@
 import express from "express";
 import handler from "./handlers.js";
+import UserModel from "./schema.js"
 const router = express.Router();
 router.route(`/`).get(handler.getUsers).post(handler.createUsers);
 router
