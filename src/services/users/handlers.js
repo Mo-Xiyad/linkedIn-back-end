@@ -88,6 +88,8 @@ const deleteUsersById = async (req, res, next) => {
 
 //CRUD FOR EXPERIENCE AND EDUCATION
 
+
+/* ---------------------------------------------------- EXPERIENCE ---------------------------------------------------- */
 //Gets all experience from a single user
 const getExperience = async (req, res, next) => {
   try {
@@ -108,10 +110,10 @@ const getExperience = async (req, res, next) => {
   const createExperience = async (req, res, next) => {
     try {
       const id = req.params.postId
-  
       const user = await UserModel.findById(id)
         if (user) {
-    res.send(user.experience)
+          const addExperience = findByIdAndUpdate(id, {$push: {experience: req.body}}, {new: true})
+    res.send(addExperience)
   } else {
     next(createHttpError(404, `User with the ID:  ${id} not found!`))
     } 
@@ -119,6 +121,8 @@ const getExperience = async (req, res, next) => {
       console.log(error);
       next(error);
     }};
+
+  /* ---------------------------------------------------- EDUCATION ---------------------------------------------------- */
 
 const handler = {
   getUsers,
