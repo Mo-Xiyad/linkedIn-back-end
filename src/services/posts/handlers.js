@@ -1,8 +1,10 @@
 import PostModel from "./schema.js";
 import UserModel from "../users/schema.js";
+// import mon
 
 const getPosts = async (req, res, next) => {
   try {
+    // const mongoQuery =
     const post = await PostModel.find().populate({ path: "user" });
     res.send(post);
   } catch (error) {
