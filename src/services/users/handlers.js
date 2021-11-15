@@ -147,6 +147,39 @@ const getExperienceById = async (req, res, next) => {
   }
 };
 
+
+//UPDATES AN EXPERIENCE WITH A USER ID
+
+const updateExperienceById = async (req, res, next) => {
+  try {
+    const userId = req.params.userId
+    const experienceId = req.params.experienceId
+    const user = await UserModel.findById(userId)
+
+    if (user) {
+      const index = user.experience.findIndex(i => i._id.toString() === experienceId)
+      console.log(index)
+
+      if (index !== -1) {
+        console.log(user.experience[index])
+        user.experience[index] = { ...user.experience[index].toObject(), ...req.body }
+        await user.save()
+        res.send(user)
+      } else {
+        next(createHttpError(404, `Experience with id: ${experienceId} not found!`))
+      }
+      
+    } else {
+      next(createHttpError(404, `User with id:  ${userId} not found!`))
+    }
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+
 /* ---------------------------------------------------- EDUCATION ---------------------------------------------------- */
 
 //Gets all education
@@ -197,7 +230,7 @@ const handler = {
   createExperience, //done
   getEducation, //done
   createEducation, //done
-  getExperienceById,
+  getExperienceById, //done
 updateExperienceById,
 deleteExperienceById,
 };
