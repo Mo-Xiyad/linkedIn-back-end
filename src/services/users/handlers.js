@@ -278,7 +278,7 @@ const updateEducationById = async (req, res, next) => {
     const user = await UserModel.findById(userId);
 
     if (user) {
-      const index = user.ecucation.findIndex(
+      const index = user.education.findIndex(
         (i) => i._id.toString() === educationId
       );
       console.log(index);
@@ -293,11 +293,35 @@ const updateEducationById = async (req, res, next) => {
         res.send(user);
       } else {
         next(
-          createHttpError(404, `Experience with id: ${experienceId} not found!`)
+          createHttpError(404, `Education with id: ${educationId} not found!`)
         );
       }
     } else {
       next(createHttpError(404, `User with id:  ${userId} not found!`));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+//DELETES AN INSTANCE OF EDUCATION BY Id
+
+const deleteEducationById = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const educationId = req.params.educationId;
+
+    const updatedEducation = await UserModel.findByIdAndUpdate(
+      userId,
+      { $pull: { education: { _id: educationId } } },
+      { new: true }
+    );
+    if (updatedEducation) {
+      res.send(updatedEducation);
+    } else {
+      next(
+        createHttpError(404, `Education with id ${educationId} not found!`)
+      );
     }
   } catch (error) {
     next(error);
@@ -318,7 +342,7 @@ const handler = {
   updateExperienceById, //done
   deleteExperienceById, //done
   getEducationById, //Done
-  updateEducationById,
+  updateEducationById, //DONE
   deleteEducationById,
 };
 export default handler;
