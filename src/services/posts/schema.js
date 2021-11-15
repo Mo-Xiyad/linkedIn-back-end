@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const postSchema = new Schema(
   {
     text: { type: String },
-    username: { type: String },
+    username: { type: String, default: "user.name", enum: ["user.name"] },
     user: {
       type: Schema.Types.ObjectId,
       required: true,
