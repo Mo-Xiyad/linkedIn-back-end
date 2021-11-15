@@ -124,6 +124,39 @@ const getExperience = async (req, res, next) => {
 
   /* ---------------------------------------------------- EDUCATION ---------------------------------------------------- */
 
+  //Gets all education
+  const getEducation = async (req, res, next) => {
+    try {
+      const id = req.params.postId
+  
+      const user = await UserModel.findById(id)
+        if (user) {
+    res.send(user.education)
+  } else {
+    next(createHttpError(404, `User with the ID:  ${id} not found!`))
+    } 
+  }catch (error) {
+      console.log(error);
+      next(error);
+    }};
+
+    //Creates a new instance of Education
+    const createEducation = async (req, res, next) => {
+      try {
+        const id = req.params.postId
+        const user = await UserModel.findById(id)
+          if (user) {
+            const addEducation = findByIdAndUpdate(id, {$push: {education: req.body}}, {new: true})
+      res.send(addEducation)
+    } else {
+      next(createHttpError(404, `User with the ID:  ${id} not found!`))
+      } 
+    }catch (error) {
+        console.log(error);
+        next(error);
+      }};
+  
+
 const handler = {
   getUsers,
   createUsers,
