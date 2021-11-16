@@ -39,7 +39,7 @@ const UserModel = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      // required: true,
     },
     surname: {
       type: String,
@@ -50,7 +50,7 @@ const UserModel = new Schema(
       required: true,
     },
     bio: {
-        type: String,
+      type: String,
     },
     image: {
       type: String,

@@ -1,5 +1,6 @@
 import UserModel from "./schema.js";
 import createHttpError from "http-errors";
+import { validationResult } from "express-validator";
 
 const getUsers = async (req, res, next) => {
   try {
@@ -19,15 +20,22 @@ const getUsers = async (req, res, next) => {
 //creates a new user
 const createUsers = async (req, res, next) => {
   try {
-    const user = req.body;
-    if (user) {
-      const createNewUser = new UserModel(req.body);
+    const errorsList = validationResult(req);
 
-      const { _id } = await createNewUser.save();
-
-      res.status(201).send({ data: _id });
+    if (!errorsList.isEmpty()) {
+      next(createHttpError(400, { errorsList }));
     } else {
-      res.status(400).send(`user could not be created`);
+      const user = req.body;
+
+      if (user) {
+        const createNewUser = new UserModel(req.body);
+
+        const { _id } = await createNewUser.save();
+
+        res.status(201).send({ data: _id });
+      } else {
+        res.status(400).send(`user could not be created`);
+      }
     }
   } catch (error) {
     console.log(error);
@@ -269,7 +277,6 @@ const getEducationById = async (req, res, next) => {
   }
 };
 
-
 //UPDATES AN INSTANCE OF EDUCATION BY ID
 
 const updateEducationById = async (req, res, next) => {
@@ -320,9 +327,7 @@ const deleteEducationById = async (req, res, next) => {
     if (updatedEducation) {
       res.send(updatedEducation);
     } else {
-      next(
-        createHttpError(404, `Education with id ${educationId} not found!`)
-      );
+      next(createHttpError(404, `Education with id ${educationId} not found!`));
     }
   } catch (error) {
     next(error);
