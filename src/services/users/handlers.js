@@ -1,4 +1,5 @@
 import UserModel from "./schema.js";
+import createHttpError from "http-errors";
 
 const getUsers = async (req, res, next) => {
   try {
@@ -109,10 +110,10 @@ const getExperience = async (req, res, next) => {
 //CREATES A NEW EXPERIENCE
 const createExperience = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
     const user = await UserModel.findById(id);
     if (user) {
-      const addExperience = findByIdAndUpdate(
+      const addExperience = await UserModel.findByIdAndUpdate(
         id,
         { $push: { experience: req.body } },
         { new: true }
