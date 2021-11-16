@@ -12,7 +12,8 @@ const getComments = async (req, res, next) => {
     if (post) {
       res.send(post);
     } else {
-      next(createHttpError(404, `Post not found!`));
+      console.log("error Inside the else block -------><");
+      res.send(`Post with the ID: ${id} not found`);
     }
   } catch (error) {
     console.log(error);
