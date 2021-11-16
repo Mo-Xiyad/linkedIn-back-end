@@ -1,10 +1,13 @@
 import express from "express";
 import handler from "./handlers.js";
+import { postCheck } from "./validator.js";
+
 import comHandlers from "../comments/handlers.js";
 
 const router = express.Router();
 
-router.route(`/`).get(handler.getPosts).post(handler.createPosts);
+// router.post("/", postCheck, handler.createPosts);
+router.route(`/`).get(handler.getPosts).post(postCheck, handler.createPosts);
 
 // LIKES
 router.route("/:postId/likes").put(handler.likePost);
