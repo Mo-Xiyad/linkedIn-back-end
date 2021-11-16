@@ -136,7 +136,7 @@ const getExperienceById = async (req, res, next) => {
 
     const user = await UserModel.findById(userId);
     if (user) {
-      const foundExperience = post.experience.find(
+      const foundExperience = user.experience.find(
         (exp) => exp._id.toString() === experienceId
       );
       res.send(foundExperience);
