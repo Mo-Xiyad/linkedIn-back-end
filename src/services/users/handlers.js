@@ -89,7 +89,7 @@ const updateUsersById = async (req, res, next) => {
       new: true,
     });
 
-    if (modifyedUser) {
+    if (modifiedUser) {
       res.status(201).send({ data: modifiedUser });
     } else {
       res.status(404).send(`user with the ID: ${id} not found`);

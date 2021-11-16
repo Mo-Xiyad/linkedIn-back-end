@@ -21,14 +21,14 @@ export const generateUserPDF = async (user) => {
     const userImageName = userImageURLParts[userImageURLParts.length - 1];
     const [id, extension] = userImageName.split(".");
     const base64 = image.data.toString("base64");
-    const base64Image = `data:image/${extension};base64,${base64}`;
+    const base64Image = `data:image/${extension};base64,${base64},${id} `;
     imagePart = { image: base64Image, fit: [100, 100] };
   }
 
   const docDefinition = {
     content: [
       {
-        text: "User Details",
+        text: "User CV",
         style: "header",
       },
       {
@@ -54,13 +54,15 @@ export const generateUserPDF = async (user) => {
       {
         text: "Image : " + user.image,
         style: "normal",
+        fit: [100, 100],
       },
       {
         text:
           "Experience : " +
           user.experience.map((exp) => {
             return (
-              "\n" + "\n" +
+              "\n" +
+              "\n" +
               "Working as " +
               exp.role +
               " at " +
@@ -83,7 +85,8 @@ export const generateUserPDF = async (user) => {
           "Education : " +
           user.education.map((edu) => {
             return (
-              "\n" +"\n" +
+              "\n" +
+              "\n" +
               "Studied at " +
               edu.school +
               " from " +
@@ -112,11 +115,11 @@ export const generateUserPDF = async (user) => {
     ],
     styles: {
       header: {
-        fontSize: 18,
+        fontSize: 25,
         margin: [0, 0, 0, 10],
       },
       normal: {
-        fontSize: 12,
+        fontSize: 18,
         margin: [0, 0, 0, 10],
       },
     },
