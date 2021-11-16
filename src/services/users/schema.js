@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const { Schema, model } = mongoose;
 
 /* THE USER MODEL LOOKS LIKE THIS 
@@ -35,7 +36,7 @@ const { Schema, model } = mongoose;
     }
 
 */
-const UserModel = new Schema(
+const UserSchema = new Schema(
   {
     name: {
       type: String,
@@ -88,4 +89,25 @@ const UserModel = new Schema(
   }
 );
 
-export default model("User", UserModel);
+UserSchema.static("createInstance", async function (attr, params, body) {
+  const id = params.userId;
+  console.log(id)
+  const user = await this.findById(id);
+  if (user) {
+    const addInstance = await this.findByIdAndUpdate(
+      id,
+      { $push: { [attr]: [body] } },
+      { new: true }
+    );
+    console.log(addInstance)
+    return addInstance;
+  } else {
+    return false
+  }
+
+})
+
+
+
+
+export default model("User", UserSchema);

@@ -232,12 +232,9 @@ const createEducation = async (req, res, next) => {
   try {
     const id = req.params.userId;
     const user = await UserModel.findById(id);
-    if (user) {
-      const addEducation = await UserModel.findByIdAndUpdate(
-        id,
-        { $push: { education: req.body } },
-        { new: true }
-      );
+    const addEducation = await UserModel.createInstance("education", req.params, req.body);
+    if(addEducation){
+      console.log(addEducation)
       res.send(addEducation);
     } else {
       next(createHttpError(404, `User with the ID: ${id} not found!`));
