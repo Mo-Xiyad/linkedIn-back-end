@@ -2,11 +2,9 @@ import express from "express";
 import handler from "./handlers.js";
 import UserModel from "./schema.js";
 const router = express.Router();
-router
-  .route(`/`)
-  .get(handler.getUsers)
-  .post(handler.createUsers)
+router.route(`/`).get(handler.getUsers).post(handler.createUsers);
 
+router.route(`/:userId/pdf`).get(handler.getUserPdf);
 
 router
   .route(`/:userId`)
@@ -16,7 +14,7 @@ router
   .post(handler.getExperience)
   .post(handler.createExperience)
   .post(handler.getEducation)
-  .post(handler.createEducation)
+  .post(handler.createEducation);
 //EXPERIENCE endpoints
 router
   .route(`/:userId/experience/:experienceId`)

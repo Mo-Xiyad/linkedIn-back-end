@@ -1,5 +1,8 @@
 import UserModel from "./schema.js";
+import fs from "fs";
+import { generateUserPDF } from "../pdf/index.js";
 
+//Get all new user
 const getUsers = async (req, res, next) => {
   try {
     const getAllUsers = await UserModel.find();
@@ -9,6 +12,32 @@ const getUsers = async (req, res, next) => {
     } else {
       res.send("No users could be found");
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+//Get all new user PDF
+const getUserPdf = async (req, res, next) => {
+  try {
+    // First create PDF
+    // Download PDF
+    // Display static information (strings for example name, surname)
+    // Display dynamic information (inside of arras)
+    // Display Images
+    // put logic if you have img, if you have non required data (for example bio is blank)
+
+    const user = await UserModel.findById(req.params.userId);
+    console.log(user);
+    if (!user) {
+      res
+        .status(404)
+        .send({ message: `User with ID:${req.params.userId}  not found` });
+    }
+    const pdfStream = await generateUserPDF(user);
+    res.setHeader("Content-Type", "application/pdf");
+    pdfStream.pipe(res);
+    pdfStream.end();
   } catch (error) {
     console.log(error);
     next(error);
@@ -268,7 +297,6 @@ const getEducationById = async (req, res, next) => {
   }
 };
 
-
 //UPDATES AN INSTANCE OF EDUCATION BY ID
 
 const updateEducationById = async (req, res, next) => {
@@ -319,9 +347,7 @@ const deleteEducationById = async (req, res, next) => {
     if (updatedEducation) {
       res.send(updatedEducation);
     } else {
-      next(
-        createHttpError(404, `Education with id ${educationId} not found!`)
-      );
+      next(createHttpError(404, `Education with id ${educationId} not found!`));
     }
   } catch (error) {
     next(error);
@@ -344,5 +370,6 @@ const handler = {
   getEducationById, //Done
   updateEducationById, //DONE
   deleteEducationById,
+  getUserPdf, //in progress
 };
 export default handler;
