@@ -69,7 +69,7 @@ const updateUsersById = async (req, res, next) => {
       new: true,
     });
 
-    if (modifyedUser) {
+    if (modifiedUser) {
       res.status(201).send({ data: modifiedUser });
     } else {
       res.status(404).send(`user with the ID: ${id} not found`);
@@ -116,19 +116,16 @@ const getExperience = async (req, res, next) => {
 };
 
 //CREATES A NEW EXPERIENCE
+
 const createExperience = async (req, res, next) => {
   try {
     const id = req.params.userId;
-    const user = await UserModel.findById(id);
-    if (user) {
-      const addExperience = await UserModel.findByIdAndUpdate(
-        id,
-        { $push: { experience: req.body } },
-        { new: true }
-      );
+    const addExperience = await UserModel.createInstance("experience", req.params, req.body);
+    if(addExperience){
+      console.log(addExperience)
       res.send(addExperience);
     } else {
-      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+      next(createHttpError(404, `User with the ID: ${id} not found!`));
     }
   } catch (error) {
     console.log(error);
@@ -136,20 +133,18 @@ const createExperience = async (req, res, next) => {
   }
 };
 
+
 //GETS A SPECIFIC EXPERIENCE
 const getExperienceById = async (req, res, next) => {
   try {
     const userId = req.params.userId;
     const experienceId = req.params.experienceId;
+    const findExperience = await UserModel.getInstance("experience", req.params, req.body, experienceId);
 
-    const user = await UserModel.findById(userId);
-    if (user) {
-      const foundExperience = user.experience.find(
-        (exp) => exp._id.toString() === experienceId
-      );
-      res.send(foundExperience);
+    if (findExperience) {
+      res.send(findExperience);
     } else {
-      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+      next(createHttpError(404, `Instance of Exerience or User with the ID:  ${id} not found!`));
     }
   } catch (error) {
     console.log(error);
@@ -240,12 +235,9 @@ const createEducation = async (req, res, next) => {
   try {
     const id = req.params.userId;
     const user = await UserModel.findById(id);
-    if (user) {
-      const addEducation = await UserModel.findByIdAndUpdate(
-        id,
-        { $push: { education: req.body } },
-        { new: true }
-      );
+    const addEducation = await UserModel.createInstance("education", req.params, req.body);
+    if(addEducation){
+      console.log(addEducation)
       res.send(addEducation);
     } else {
       next(createHttpError(404, `User with the ID: ${id} not found!`));
@@ -258,24 +250,21 @@ const createEducation = async (req, res, next) => {
 
 //GETS A SPECIFIC INSTANCE OF EDUCATION
 const getEducationById = async (req, res, next) => {
-  try {
-    const userId = req.params.userId;
-    const educationId = req.params.educationId;
-
-    const user = await UserModel.findById(userId);
-    if (user) {
-      const foundEducation = user.education.find(
-        (exp) => exp._id.toString() === educationId
-      );
-      res.send(foundEducation);
-    } else {
-      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+    try {
+      const userId = req.params.userId;
+      const educationId = req.params.educationId;
+      const findEducation = await UserModel.getInstance("education", req.params, req.body, educationId);
+  
+      if (findEducation) {
+        res.send(findEducation);
+      } else {
+        next(createHttpError(404, `Instance of Education or User with the ID:  ${id} not found!`));
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-};
+  };
 
 //UPDATES AN INSTANCE OF EDUCATION BY ID
 
@@ -341,13 +330,13 @@ const handler = {
   updateUsersById,
   deleteUsersById,
   getExperience, //done
-  createExperience, //done
+  createExperience, //done DRY
   getEducation, //done
-  createEducation, //done
-  getExperienceById, //done
+  createEducation, //done DRY
+  getExperienceById, //done DRY
   updateExperienceById, //done
   deleteExperienceById, //done
-  getEducationById, //Done
+  getEducationById, //Done  DRY
   updateEducationById, //DONE
   deleteEducationById,
 };
