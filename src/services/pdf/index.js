@@ -60,6 +60,7 @@ export const generateUserPDF = async (user) => {
           "Experience : " +
           user.experience.map((exp) => {
             return (
+              "\n" + "\n" +
               "Working as " +
               exp.role +
               " at " +
@@ -71,7 +72,9 @@ export const generateUserPDF = async (user) => {
               "in the area of " +
               exp.area +
               "doing" +
-              exp.description
+              exp.description +
+              "\n" +
+              "\n"
             );
           }),
       },
@@ -80,6 +83,7 @@ export const generateUserPDF = async (user) => {
           "Education : " +
           user.education.map((edu) => {
             return (
+              "\n" +"\n" +
               "Studied at " +
               edu.school +
               " from " +
@@ -91,7 +95,9 @@ export const generateUserPDF = async (user) => {
               "having activities like " +
               edu.activities +
               "in the field of studies" +
-              edu.fieldOfStudy
+              edu.fieldOfStudy +
+              "\n" +
+              "\n"
             );
           }),
       },
