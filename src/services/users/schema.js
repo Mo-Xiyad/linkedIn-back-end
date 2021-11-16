@@ -1,7 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-
-const { Schema , model } = mongoose;
+const { Schema, model } = mongoose;
 
 /* THE USER MODEL LOOKS LIKE THIS 
     {
@@ -18,7 +17,6 @@ const { Schema , model } = mongoose;
         "updatedAt": "2019-09-20T09:00:46.977Z", //server generated
     }
 */
-
 
 /* An instance of EXPERIENCE : 
 
@@ -37,52 +35,57 @@ const { Schema , model } = mongoose;
     }
 
 */
-const UserModel = new Schema({
-
+const UserModel = new Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     surname: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     bio: {
         type: String,
     },
     image: {
-        type: String,
+      type: String,
     },
     username: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    experience: [{
-        role : {type: String, required: true},
-        company : {type: String, required: true},
-        description : {type: String, required: true},
-        area : {type: String, required: true},
-        startDate : {type: Date, required: true},
-        endDate : {type: Date},
-        image: {type: String} 
-    }],
-    education: [{
-        school : {type: String, required: true},
-        fieldOfStudy : {type: String, required: true},
-        activities : {type: String, required: true},
-        description : {type: String, required: true},
-        startDate : {type: Date, required: true},
-        endDate : {type: Date},
-        image: {type: String} 
-    }],
+    experience: [
+      {
+        role: { type: String, required: true },
+        company: { type: String, required: true },
+        description: { type: String, required: true },
+        area: { type: String, required: true },
+        startDate: { type: Date, required: true },
+        endDate: { type: Date },
+        image: { type: String },
+      },
+    ],
+    education: [
+      {
+        school: { type: String, required: true },
+        fieldOfStudy: { type: String, required: true },
+        activities: { type: String, required: true },
+        description: { type: String, required: true },
+        startDate: { type: Date, required: true },
+        endDate: { type: Date },
+        image: { type: String },
+      },
+    ],
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-}, {
-    timestamps : true
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
-
-export default model("User" , UserModel)
+export default model("User", UserModel);
