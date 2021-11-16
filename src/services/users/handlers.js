@@ -28,7 +28,7 @@ const getUserPdf = async (req, res, next) => {
     // put logic if you have img, if you have non required data (for example bio is blank)
 
     const user = await UserModel.findById(req.params.userId);
-    console.log(user);
+    /* console.log(user); */
     if (!user) {
       res
         .status(404)
