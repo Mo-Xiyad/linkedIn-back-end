@@ -42,6 +42,7 @@ const createPosts = async (req, res, next) => {
     console.log(errorsList);
 
     if (!errorsList.isEmpty()) {
+      // return res.status(400).json({ errors: errorsList.array() });
       next(createHttpError(400, { errorsList }));
     } else {
       const newPost = new PostModel(req.body);

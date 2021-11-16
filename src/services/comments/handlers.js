@@ -1,5 +1,7 @@
 import PostModel from "../posts/schema.js";
 import q2m from "query-to-mongo";
+import { validationResult } from "express-validator";
+import createHttpError from "http-errors";
 
 const getComments = async (req, res, next) => {
   try {
@@ -22,19 +24,25 @@ const getComments = async (req, res, next) => {
 };
 const createComments = async (req, res, next) => {
   try {
-    const postId = req.params.postId;
-    const post = await PostModel.findById(postId);
-    if (post) {
-      const addComment = await PostModel.findByIdAndUpdate(
-        postId,
-        { $push: { comments: req.body } },
-        { new: true }
-      );
-      console.log(addComment);
-      res.send({ addComment });
+    const errorsList = validationResult(req);
+    if (!errorsList.isEmpty()) {
+      // return res.status(400).json({ errors: errorsList.array() });
+      next(createHttpError(400, { errorsList }));
     } else {
-      console.log("error Inside the else block -------><");
-      res.send(`Post with the ID: ${postId} not found`);
+      const postId = req.params.postId;
+      const post = await PostModel.findById(postId);
+      if (post) {
+        const addComment = await PostModel.findByIdAndUpdate(
+          postId,
+          { $push: { comments: req.body } },
+          { new: true }
+        );
+        console.log(addComment);
+        res.send({ addComment });
+      } else {
+        console.log("error Inside the else block -------><");
+        res.send(`Post with the ID: ${postId} not found`);
+      }
     }
   } catch (error) {
     console.log(error);
