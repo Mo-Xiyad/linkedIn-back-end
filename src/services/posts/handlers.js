@@ -1,6 +1,7 @@
 import PostModel from "./schema.js";
 import UserModel from "../users/schema.js";
 import createHttpError from "http-errors";
+import mongoose from "mongoose";
 import q2m from "query-to-mongo";
 
 const getPosts = async (req, res, next) => {
@@ -96,7 +97,41 @@ const deletePostsById = async (req, res, next) => {
     next(error);
   }
 };
+
+const likePost = async (req, res, next) => {
+  try {
+    const id = req.params.postId;
+    const post = await PostModel.findById(id);
+    if (post) {
+      const liked = await PostModel.findOne({
+        _id: id,
+        likes: new mongoose.Types.ObjectId(req.body.userId),
+      });
+      if (!liked) {
+        await PostModel.findByIdAndUpdate(
+          id,
+          { $push: { likes: req.body.userId } },
+          { new: true }
+        );
+      } else {
+        await PostModel.findByIdAndUpdate(
+          id,
+          { $pull: { likes: req.body.userId } },
+          { new: true }
+        );
+      }
+    } else {
+      next(createHttpError(404, `Post with id ${id} not found!`));
+    }
+
+    const newPost = await PostModel.findById(id);
+
+    res.send(newPost);
+  } catch (error) {}
+};
+
 const handler = {
+  likePost,
   getPosts,
   createPosts,
   getPostsById,
