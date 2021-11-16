@@ -333,9 +333,10 @@ const getExperienceAsCsvFile = async (req, res, next) => {
     const id = req.params.userId;
 
     const user = await UserModel.findById(id);
+    const experience = user.experience.map(exp => exp.toObject())
     if (user) {
       const fileName = "./" + user.name + user.surname + "Experiences.csv"
-      const csv = new ObjectsToCsv(user.experience);
+      const csv = new ObjectsToCsv(experience);
       console.log("THIS IS THE CSV", csv)
       await csv.toDisk(fileName);
       res.download(fileName, () => {
