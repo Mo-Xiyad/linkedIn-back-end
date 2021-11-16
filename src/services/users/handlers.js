@@ -61,7 +61,7 @@ const updateUsersById = async (req, res, next) => {
       new: true,
     });
 
-    if (modifyedUser) {
+    if (modifiedUser) {
       res.status(201).send({ data: modifiedUser });
     } else {
       res.status(404).send(`user with the ID: ${id} not found`);
@@ -328,10 +328,10 @@ const handler = {
   createExperience, //done DRY
   getEducation, //done
   createEducation, //done DRY
-  getExperienceById, //done
+  getExperienceById, //done DRY
   updateExperienceById, //done
   deleteExperienceById, //done
-  getEducationById, //Done
+  getEducationById, //Done  DRY
   updateEducationById, //DONE
   deleteEducationById,
 };
