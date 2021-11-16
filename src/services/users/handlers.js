@@ -256,7 +256,7 @@ const getEducationById = async (req, res, next) => {
 
     const user = await UserModel.findById(userId);
     if (user) {
-      const foundEducation = post.education.find(
+      const foundEducation = user.education.find(
         (exp) => exp._id.toString() === educationId
       );
       res.send(foundEducation);
@@ -275,7 +275,7 @@ const getEducationById = async (req, res, next) => {
 const updateEducationById = async (req, res, next) => {
   try {
     const userId = req.params.userId;
-    const educationId = req.params.ecucationId;
+    const educationId = req.params.educationId;
     const user = await UserModel.findById(userId);
 
     if (user) {
