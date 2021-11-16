@@ -93,7 +93,7 @@ const deleteUsersById = async (req, res, next) => {
 //Gets all experience from a single user
 const getExperience = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
 
     const user = await UserModel.findById(id);
     if (user) {
