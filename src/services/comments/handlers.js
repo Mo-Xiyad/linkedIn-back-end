@@ -42,9 +42,14 @@ const createComments = async (req, res, next) => {
 };
 const getCommentsById = async (req, res, next) => {
   try {
-    /* 
-
-     */
+    const commentId = req.params.postId;
+    const comment = await PostModel.findById(commentId);
+    if (comment) {
+      res.status(201).send(comment);
+    } else {
+      console.log("error Inside the else block -------><");
+      res.send(`Comment with the ID: ${commentId} not found`);
+    }
   } catch (error) {
     console.log(error);
     next(error);
@@ -52,9 +57,16 @@ const getCommentsById = async (req, res, next) => {
 };
 const updateCommentsById = async (req, res, next) => {
   try {
-    /* 
-    
-    */
+    const commentId = req.params.postId;
+    const comment = await PostModel.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    if (comment) {
+      res.status(201).send(comment);
+    } else {
+      console.log("error Inside the else block -------><");
+      res.send(`Comment with the ID: ${commentId} not found`);
+    }
   } catch (error) {
     console.log(error);
     next(error);
@@ -62,9 +74,14 @@ const updateCommentsById = async (req, res, next) => {
 };
 const deleteCommentsById = async (req, res, next) => {
   try {
-    /* 
-    
-    */
+    const commentId = req.params.postId;
+    const comment = await PostModel.findByIdAndDelete(commentId);
+    if (comment) {
+      res.status(201).send(comment);
+    } else {
+      console.log("error Inside the else block -------><");
+      res.send(`Comment with the ID: ${commentId} not found`);
+    }
   } catch (error) {
     console.log(error);
     next(error);
