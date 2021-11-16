@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const { Schema, model } = mongoose;
 
 /* THE USER MODEL LOOKS LIKE THIS 
@@ -51,7 +50,7 @@ const UserSchema = new Schema(
       required: true,
     },
     bio: {
-        type: String,
+      type: String,
     },
     image: {
       type: String,
@@ -91,7 +90,7 @@ const UserSchema = new Schema(
 
 UserSchema.static("createInstance", async function (attr, params, body) {
   const id = params.userId;
-  console.log(id)
+  console.log(id);
   const user = await this.findById(id);
   if (user) {
     const addInstance = await this.findByIdAndUpdate(
@@ -99,15 +98,45 @@ UserSchema.static("createInstance", async function (attr, params, body) {
       { $push: { [attr]: [body] } },
       { new: true }
     );
-    console.log(addInstance)
+    console.log(addInstance);
     return addInstance;
   } else {
-    return false
+    return false;
   }
+});
 
-})
+//attrId is the experienceId OR educationId
+UserSchema.static("getInstance", async function (attr, params, body, attrId) {
+  const id = params.userId;
 
+  console.log(id);
+  //checks for a user
+  const user = await this.findById(id);
 
+  //gets instance of experience
+  if (user && attr === "experience") {
+    const foundInstance = user.experience.find(
+      (exp) => exp._id.toString() === attrId
+    );
+    console.log(foundInstance);
+    if (foundInstance) {
+      return foundInstance;
+    } else {
+      return false;
+    }
 
+  //gets instance of education
+  } else if(user && attr === "education") {
+    const foundInstance = user.education.find(
+      (exp) => exp._id.toString() === attrId
+    );
+    console.log(foundInstance);
+    if (foundInstance) {
+      return foundInstance;
+  } else {return false} 
+  //RETURNS FALSE IF NEITHER EDUCATION OR EXPERIENCE
+}else {
+    return false;
+  }});
 
 export default model("User", UserSchema);
