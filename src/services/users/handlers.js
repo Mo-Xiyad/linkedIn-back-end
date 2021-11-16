@@ -27,10 +27,11 @@ const createUsers = async (req, res, next) => {
     if (!errorsList.isEmpty()) {
       next(createHttpError(400, { errorsList }));
     } else {
-      const user = req.body;
+      const userImage = {image:`https://eu.ui-avatars.com/api/?name=${req.body.name}+${req.body.surname}`}
+      const user = {...userImage,...req.body};
 
       if (user) {
-        const createNewUser = new UserModel(req.body);
+        const createNewUser = new UserModel(user);
 
         const { _id } = await createNewUser.save();
 
@@ -325,6 +326,8 @@ const deleteEducationById = async (req, res, next) => {
   }
 };
 
+
+//The function below uses this package https://www.npmjs.com/package/objects-to-csv
 //Downloads experience as CSV file 
 const getExperienceAsCsvFile = async (req, res, next) => {
   try {
@@ -338,7 +341,7 @@ const getExperienceAsCsvFile = async (req, res, next) => {
       const fileName = "./" + user.name + user.surname + "Experiences.csv"
       const csv = new ObjectsToCsv(experience);
       console.log("THIS IS THE CSV", csv)
-      await csv.toDisk(fileName);
+      await csv.toDisk(fileName, { allColumns: true });
       res.download(fileName, () => {
         fs.unlinkSync(fileName)
       });
