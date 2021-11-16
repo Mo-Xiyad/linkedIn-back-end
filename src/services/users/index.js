@@ -2,21 +2,24 @@ import express from "express";
 import handler from "./handlers.js";
 import UserModel from "./schema.js";
 const router = express.Router();
-router
-  .route(`/`)
-  .get(handler.getUsers)
-  .post(handler.createUsers)
-
+router.route(`/`).get(handler.getUsers).post(handler.createUsers);
 
 router
   .route(`/:userId`)
   .get(handler.getUsersById)
   .put(handler.updateUsersById)
-  .delete(handler.deleteUsersById)
-  .post(handler.getExperience)
-  .post(handler.createExperience)
-  .post(handler.getEducation)
-  .post(handler.createEducation)
+  .delete(handler.deleteUsersById);
+
+router
+  .route(`/:userId/experience`)
+  .get(handler.getExperience)
+  .post(handler.createExperience);
+
+router
+  .route(`/:userId/education`)
+  .get(handler.getEducation)
+  .post(handler.createEducation);
+
 //EXPERIENCE endpoints
 router
   .route(`/:userId/experience/:experienceId`)
@@ -29,4 +32,5 @@ router
   .get(handler.getEducationById)
   .put(handler.updateEducationById)
   .delete(handler.deleteEducationById);
+
 export default router;

@@ -1,4 +1,5 @@
 import UserModel from "./schema.js";
+import createHttpError from "http-errors";
 
 const getUsers = async (req, res, next) => {
   try {
@@ -92,7 +93,7 @@ const deleteUsersById = async (req, res, next) => {
 //Gets all experience from a single user
 const getExperience = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
 
     const user = await UserModel.findById(id);
     if (user) {
@@ -109,10 +110,10 @@ const getExperience = async (req, res, next) => {
 //CREATES A NEW EXPERIENCE
 const createExperience = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
     const user = await UserModel.findById(id);
     if (user) {
-      const addExperience = findByIdAndUpdate(
+      const addExperience = await UserModel.findByIdAndUpdate(
         id,
         { $push: { experience: req.body } },
         { new: true }
@@ -135,7 +136,7 @@ const getExperienceById = async (req, res, next) => {
 
     const user = await UserModel.findById(userId);
     if (user) {
-      const foundExperience = post.experience.find(
+      const foundExperience = user.experience.find(
         (exp) => exp._id.toString() === experienceId
       );
       res.send(foundExperience);
@@ -212,7 +213,7 @@ const deleteExperienceById = async (req, res, next) => {
 //Gets all education
 const getEducation = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
 
     const user = await UserModel.findById(id);
     if (user) {
@@ -229,10 +230,10 @@ const getEducation = async (req, res, next) => {
 //Creates a new instance of Education
 const createEducation = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
     const user = await UserModel.findById(id);
     if (user) {
-      const addEducation = findByIdAndUpdate(
+      const addEducation = await UserModel.findByIdAndUpdate(
         id,
         { $push: { education: req.body } },
         { new: true }
@@ -255,7 +256,7 @@ const getEducationById = async (req, res, next) => {
 
     const user = await UserModel.findById(userId);
     if (user) {
-      const foundEducation = post.education.find(
+      const foundEducation = user.education.find(
         (exp) => exp._id.toString() === educationId
       );
       res.send(foundEducation);
@@ -274,7 +275,7 @@ const getEducationById = async (req, res, next) => {
 const updateEducationById = async (req, res, next) => {
   try {
     const userId = req.params.userId;
-    const educationId = req.params.ecucationId;
+    const educationId = req.params.educationId;
     const user = await UserModel.findById(userId);
 
     if (user) {
