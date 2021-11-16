@@ -1,6 +1,8 @@
 import UserModel from "./schema.js";
 import createHttpError from "http-errors";
 import { validationResult } from "express-validator";
+import ObjectsToCsv from "objects-to-csv"
+import fs from "fs"
 
 const getUsers = async (req, res, next) => {
   try {
@@ -323,6 +325,31 @@ const deleteEducationById = async (req, res, next) => {
   }
 };
 
+//Downloads experience as CSV file 
+const getExperienceAsCsvFile = async (req, res, next) => {
+  try {
+    console.log("THIS IS THE CSV START")
+
+    const id = req.params.userId;
+
+    const user = await UserModel.findById(id);
+    if (user) {
+      const fileName = "./" + user.name + user.surname + "Experiences.csv"
+      const csv = new ObjectsToCsv(user.experience);
+      console.log("THIS IS THE CSV", csv)
+      await csv.toDisk(fileName);
+      res.download(fileName, () => {
+        fs.unlinkSync(fileName)
+      });
+    } else {
+      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const handler = {
   getUsers,
   createUsers,
@@ -339,5 +366,6 @@ const handler = {
   getEducationById, //Done  DRY
   updateEducationById, //DONE
   deleteEducationById,
+  getExperienceAsCsvFile,
 };
 export default handler;

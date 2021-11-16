@@ -37,4 +37,9 @@ router
   .put(handler.updateEducationById)
   .delete(handler.deleteEducationById);
 
+  //ENDPOINT FOR CSV FILE
+  router
+  .route(`/:userId/csv`)
+  .get(handler.getExperienceAsCsvFile)
+
 export default router;
