@@ -5,7 +5,6 @@ import listEndpoints from "express-list-endpoints";
 
 import UsersRouter from "./services/users/index.js";
 import PostsRouter from "./services/posts/index.js";
-import CommentsRouter from "./services/comments/index.js";
 
 const { MONGO_CONNECTION, PORT } = process.env;
 
@@ -20,7 +19,6 @@ server.use(express.json());
 
 server.use("/users", UsersRouter);
 server.use("/posts", PostsRouter);
-server.use("/comments", CommentsRouter);
 // ******************************** ERROR HANDLERS ********************************
 
 // ******************************** DB CONNECTION ********************************
