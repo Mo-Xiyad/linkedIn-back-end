@@ -1,6 +1,7 @@
 import express from "express";
 import handler from "./handlers.js";
 import { postCheck } from "./validator.js";
+import { commentsValidator } from "../comments/validator.js";
 
 import comHandlers from "../comments/handlers.js";
 
@@ -22,7 +23,7 @@ router
 router
   .route(`/:postId/comment`)
   .get(comHandlers.getComments)
-  .post(comHandlers.createComments);
+  .post(commentsValidator, comHandlers.createComments);
 
 router
   .route(`/:postId/comment/:commentId`)
