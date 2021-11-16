@@ -335,7 +335,9 @@ const getExperienceAsCsvFile = async (req, res, next) => {
 
     const id = req.params.userId;
 
-    const user = await UserModel.findById(id);
+    const user = await UserModel.findById(id, {
+      'experience._id':0
+    } ); 
     const experience = user.experience.map(exp => exp.toObject())
     if (user) {
       const fileName = "./" + user.name + user.surname + "Experiences.csv"
