@@ -213,7 +213,7 @@ const deleteExperienceById = async (req, res, next) => {
 //Gets all education
 const getEducation = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
 
     const user = await UserModel.findById(id);
     if (user) {
@@ -230,10 +230,10 @@ const getEducation = async (req, res, next) => {
 //Creates a new instance of Education
 const createEducation = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
     const user = await UserModel.findById(id);
     if (user) {
-      const addEducation = findByIdAndUpdate(
+      const addEducation = await UserModel.findByIdAndUpdate(
         id,
         { $push: { education: req.body } },
         { new: true }
