@@ -2,7 +2,12 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
-
+import {
+  badRequestHandler,
+  unauthorizedHandler,
+  notFoundHandler,
+  genericErrorHandler,
+} from "./errorHandlers.js";
 import UsersRouter from "./services/users/index.js";
 import PostsRouter from "./services/posts/index.js";
 
@@ -20,6 +25,11 @@ server.use(express.json());
 server.use("/users", UsersRouter);
 server.use("/posts", PostsRouter);
 // ******************************** ERROR HANDLERS ********************************
+
+server.use(badRequestHandler);
+server.use(unauthorizedHandler);
+server.use(notFoundHandler);
+server.use(genericErrorHandler);
 
 // ******************************** DB CONNECTION ********************************
 

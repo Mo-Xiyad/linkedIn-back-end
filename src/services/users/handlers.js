@@ -1,6 +1,15 @@
 import UserModel from "./schema.js";
+
 import fs from "fs";
 import { generateUserPDF } from "../pdf/index.js";
+
+import createHttpError from "http-errors";
+import { validationResult } from "express-validator";
+import ObjectsToCsv from "objects-to-csv";
+import fs from "fs";
+
+
+
 
 //Get all new user
 const getUsers = async (req, res, next) => {
@@ -47,15 +56,25 @@ const getUserPdf = async (req, res, next) => {
 //creates a new user
 const createUsers = async (req, res, next) => {
   try {
-    const user = req.body;
-    if (user) {
-      const createNewUser = new UserModel(req.body);
+    const errorsList = validationResult(req);
 
-      const { _id } = await createNewUser.save();
-
-      res.status(201).send({ data: _id });
+    if (!errorsList.isEmpty()) {
+      next(createHttpError(400, { errorsList }));
     } else {
-      res.status(400).send(`user could not be created`);
+      const userImage = {
+        image: `https://eu.ui-avatars.com/api/?name=${req.body.name}+${req.body.surname}`,
+      };
+      const user = { ...userImage, ...req.body };
+
+      if (user) {
+        const createNewUser = new UserModel(user);
+
+        const { _id } = await createNewUser.save();
+
+        res.status(201).send({ data: _id });
+      } else {
+        res.status(400).send(`user could not be created`);
+      }
     }
   } catch (error) {
     console.log(error);
@@ -99,6 +118,9 @@ const updateUsersById = async (req, res, next) => {
     next(error);
   }
 };
+
+
+
 const deleteUsersById = async (req, res, next) => {
   try {
     const id = req.params.userId;
@@ -121,7 +143,7 @@ const deleteUsersById = async (req, res, next) => {
 //Gets all experience from a single user
 const getExperience = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
 
     const user = await UserModel.findById(id);
     if (user) {
@@ -136,19 +158,20 @@ const getExperience = async (req, res, next) => {
 };
 
 //CREATES A NEW EXPERIENCE
+
 const createExperience = async (req, res, next) => {
   try {
-    const id = req.params.postId;
-    const user = await UserModel.findById(id);
-    if (user) {
-      const addExperience = findByIdAndUpdate(
-        id,
-        { $push: { experience: req.body } },
-        { new: true }
-      );
+    const id = req.params.userId;
+    const addExperience = await UserModel.createInstance(
+      "experience",
+      req.params,
+      req.body
+    );
+    if (addExperience) {
+      console.log(addExperience);
       res.send(addExperience);
     } else {
-      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+      next(createHttpError(404, `User with the ID: ${id} not found!`));
     }
   } catch (error) {
     console.log(error);
@@ -161,15 +184,22 @@ const getExperienceById = async (req, res, next) => {
   try {
     const userId = req.params.userId;
     const experienceId = req.params.experienceId;
+    const findExperience = await UserModel.getInstance(
+      "experience",
+      req.params,
+      req.body,
+      experienceId
+    );
 
-    const user = await UserModel.findById(userId);
-    if (user) {
-      const foundExperience = post.experience.find(
-        (exp) => exp._id.toString() === experienceId
-      );
-      res.send(foundExperience);
+    if (findExperience) {
+      res.send(findExperience);
     } else {
-      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+      next(
+        createHttpError(
+          404,
+          `Instance of Exerience or User with the ID:  ${id} not found!`
+        )
+      );
     }
   } catch (error) {
     console.log(error);
@@ -241,7 +271,7 @@ const deleteExperienceById = async (req, res, next) => {
 //Gets all education
 const getEducation = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
 
     const user = await UserModel.findById(id);
     if (user) {
@@ -258,14 +288,15 @@ const getEducation = async (req, res, next) => {
 //Creates a new instance of Education
 const createEducation = async (req, res, next) => {
   try {
-    const id = req.params.postId;
+    const id = req.params.userId;
     const user = await UserModel.findById(id);
-    if (user) {
-      const addEducation = findByIdAndUpdate(
-        id,
-        { $push: { education: req.body } },
-        { new: true }
-      );
+    const addEducation = await UserModel.createInstance(
+      "education",
+      req.params,
+      req.body
+    );
+    if (addEducation) {
+      console.log(addEducation);
       res.send(addEducation);
     } else {
       next(createHttpError(404, `User with the ID: ${id} not found!`));
@@ -281,15 +312,22 @@ const getEducationById = async (req, res, next) => {
   try {
     const userId = req.params.userId;
     const educationId = req.params.educationId;
+    const findEducation = await UserModel.getInstance(
+      "education",
+      req.params,
+      req.body,
+      educationId
+    );
 
-    const user = await UserModel.findById(userId);
-    if (user) {
-      const foundEducation = post.education.find(
-        (exp) => exp._id.toString() === educationId
-      );
-      res.send(foundEducation);
+    if (findEducation) {
+      res.send(findEducation);
     } else {
-      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+      next(
+        createHttpError(
+          404,
+          `Instance of Education or User with the ID:  ${id} not found!`
+        )
+      );
     }
   } catch (error) {
     console.log(error);
@@ -302,7 +340,7 @@ const getEducationById = async (req, res, next) => {
 const updateEducationById = async (req, res, next) => {
   try {
     const userId = req.params.userId;
-    const educationId = req.params.ecucationId;
+    const educationId = req.params.educationId;
     const user = await UserModel.findById(userId);
 
     if (user) {
@@ -354,6 +392,35 @@ const deleteEducationById = async (req, res, next) => {
   }
 };
 
+//The function below uses this package https://www.npmjs.com/package/objects-to-csv
+//Downloads experience as CSV file
+const getExperienceAsCsvFile = async (req, res, next) => {
+  try {
+    console.log("THIS IS THE CSV START");
+
+    const id = req.params.userId;
+
+    const user = await UserModel.findById(id, {
+      "experience._id": 0,
+    });
+    const experience = user.experience.map((exp) => exp.toObject());
+    if (user) {
+      const fileName = "./" + user.name + user.surname + "Experiences.csv";
+      const csv = new ObjectsToCsv(experience);
+      console.log("THIS IS THE CSV", csv);
+      await csv.toDisk(fileName, { allColumns: true });
+      res.download(fileName, () => {
+        fs.unlinkSync(fileName);
+      });
+    } else {
+      next(createHttpError(404, `User with the ID:  ${id} not found!`));
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const handler = {
   getUsers,
   createUsers,
@@ -361,15 +428,19 @@ const handler = {
   updateUsersById,
   deleteUsersById,
   getExperience, //done
-  createExperience, //done
+  createExperience, //done DRY
   getEducation, //done
-  createEducation, //done
-  getExperienceById, //done
+  createEducation, //done DRY
+  getExperienceById, //done DRY
   updateExperienceById, //done
   deleteExperienceById, //done
-  getEducationById, //Done
+  getEducationById, //Done  DRY
   updateEducationById, //DONE
   deleteEducationById,
+
   getUserPdf, //in progress
+
+  getExperienceAsCsvFile,
+
 };
 export default handler;
