@@ -28,12 +28,12 @@ export const generateUserPDF = async (user) => {
   const docDefinition = {
     content: [
       {
-        text: "User CV",
+        text: "User CV" + "\n",
         style: "header",
       },
       imagePart,
       {
-        text: "Name : " + user.name,
+        text: "\n" + "Name : " + user.name,
         style: "normal",
       },
       {
