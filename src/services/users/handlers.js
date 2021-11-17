@@ -406,6 +406,5 @@ const handler = {
   updateEducationById, //DONE
   deleteEducationById,
   getExperienceAsCsvFile,
-  /* updateUsersByIdProfilePicture, */
 };
 export default handler;
