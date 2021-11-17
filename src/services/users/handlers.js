@@ -1,4 +1,8 @@
 import UserModel from "./schema.js";
+
+import fs from "fs";
+import { generateUserPDF } from "../pdf/index.js";
+
 import createHttpError from "http-errors";
 import { validationResult } from "express-validator";
 import ObjectsToCsv from "objects-to-csv";
@@ -6,6 +10,8 @@ import fs from "fs";
 
 
 
+
+//Get all new user
 const getUsers = async (req, res, next) => {
   try {
     const getAllUsers = await UserModel.find();
@@ -15,6 +21,32 @@ const getUsers = async (req, res, next) => {
     } else {
       res.send("No users could be found");
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+//Get all new user PDF
+const getUserPdf = async (req, res, next) => {
+  try {
+    // First create PDF
+    // Download PDF
+    // Display static information (strings for example name, surname)
+    // Display dynamic information (inside of arras)
+    // Display Images
+    // put logic if you have img, if you have non required data (for example bio is blank)
+
+    const user = await UserModel.findById(req.params.userId);
+    /* console.log(user); */
+    if (!user) {
+      res
+        .status(404)
+        .send({ message: `User with ID:${req.params.userId}  not found` });
+    }
+    const pdfStream = await generateUserPDF(user);
+    res.setHeader("Content-Type", "application/pdf");
+    pdfStream.pipe(res);
+    pdfStream.end();
   } catch (error) {
     console.log(error);
     next(error);
@@ -405,6 +437,10 @@ const handler = {
   getEducationById, //Done  DRY
   updateEducationById, //DONE
   deleteEducationById,
+
+  getUserPdf, //in progress
+
   getExperienceAsCsvFile,
+
 };
 export default handler;

@@ -19,15 +19,28 @@ const cloudinaryStorageUsers = new CloudinaryStorage({
 
 
 const router = express.Router();
+
+router.route(`/`).get(handler.getUsers).post(handler.createUsers);
+
+router.route(`/:userId/pdf`).get(handler.getUserPdf);
+
 router
   .route(`/`)
   .get(handler.getUsers)
   .post(userValidator, handler.createUsers);
 
+
 router
   .route(`/:userId`)
   .get(handler.getUsersById)
   .put(handler.updateUsersById)
+
+  .delete(handler.deleteUsersById)
+  .post(handler.getExperience)
+  .post(handler.createExperience)
+  .post(handler.getEducation)
+  .post(handler.createEducation);
+
   .delete(handler.deleteUsersById);
 
 router
@@ -39,6 +52,7 @@ router
   .route(`/:userId/education`)
   .get(handler.getEducation)
   .post(handler.createEducation);
+
 
 //EXPERIENCE endpoints
 router
