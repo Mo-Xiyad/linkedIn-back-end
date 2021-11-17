@@ -21,7 +21,7 @@ export const generateUserPDF = async (user) => {
     const userImageName = userImageURLParts[userImageURLParts.length - 1];
     const [id, extension] = userImageName.split(".");
     const base64 = image.data.toString("base64");
-    const base64Image = `data:image/${extension};base64,${base64},${id} `;
+    const base64Image = `data:image/${extension};base64,${base64} `;
     imagePart = { image: base64Image, fit: [100, 100] };
   }
 
@@ -31,6 +31,7 @@ export const generateUserPDF = async (user) => {
         text: "User CV",
         style: "header",
       },
+      imagePart,
       {
         text: "Name : " + user.name,
         style: "normal",
@@ -79,6 +80,7 @@ export const generateUserPDF = async (user) => {
               "\n"
             );
           }),
+        style: "normal",
       },
       {
         text:
@@ -103,6 +105,7 @@ export const generateUserPDF = async (user) => {
               "\n"
             );
           }),
+        style: "normal",
       },
       {
         text: "Created At : " + user.createdAt,
