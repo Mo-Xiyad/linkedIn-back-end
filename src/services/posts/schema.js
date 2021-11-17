@@ -14,7 +14,7 @@ const commentArray = new Schema(
 const postSchema = new Schema(
   {
     text: { type: String, required: true },
-    username: { type: String, default: "Admin", required: true },
+    username: { type: String, default: "Admin"},
     user: {
       type: Schema.Types.ObjectId,
       required: true,

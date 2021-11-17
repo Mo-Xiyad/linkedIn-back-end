@@ -2,9 +2,7 @@ import express from "express";
 import handler from "./handlers.js";
 import { postCheck } from "./validator.js";
 import { commentsValidator } from "../comments/validator.js";
-
 import comHandlers from "../comments/handlers.js";
-
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
