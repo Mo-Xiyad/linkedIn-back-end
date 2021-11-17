@@ -1,6 +1,6 @@
 import UserModel from "./schema.js";
 
-import fs from "fs";
+
 import { generateUserPDF } from "../pdf/index.js";
 
 import createHttpError from "http-errors";

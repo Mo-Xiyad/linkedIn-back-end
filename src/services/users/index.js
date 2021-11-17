@@ -34,14 +34,12 @@ router
   .route(`/:userId`)
   .get(handler.getUsersById)
   .put(handler.updateUsersById)
-
   .delete(handler.deleteUsersById)
   .post(handler.getExperience)
   .post(handler.createExperience)
   .post(handler.getEducation)
   .post(handler.createEducation);
 
-  .delete(handler.deleteUsersById);
 
 router
   .route(`/:userId/experience`)
