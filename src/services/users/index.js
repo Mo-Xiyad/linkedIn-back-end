@@ -6,7 +6,7 @@ import { userValidator } from "./validator.js";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
-import dotenv from "dotenv/config";
+
 
 // Initialize cloudinary for user upload images
 const cloudinaryStorageUsers = new CloudinaryStorage({
@@ -16,13 +16,7 @@ const cloudinaryStorageUsers = new CloudinaryStorage({
   },
 });
 
-// Initialize cloudinary for post upload images
-const cloudinaryStoragePosts = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "posts_pictures",
-  },
-});
+
 
 const router = express.Router();
 router
@@ -81,7 +75,6 @@ router.put(
     }
   }
 );
-
 
 
 export default router;
