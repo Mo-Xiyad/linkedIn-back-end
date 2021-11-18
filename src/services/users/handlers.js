@@ -1,15 +1,11 @@
 import UserModel from "./schema.js";
 
-
 import { generateUserPDF } from "../pdf/index.js";
 
 import createHttpError from "http-errors";
 import { validationResult } from "express-validator";
 import ObjectsToCsv from "objects-to-csv";
 import fs from "fs";
-
-
-
 
 //Get all new user
 const getUsers = async (req, res, next) => {
@@ -47,6 +43,22 @@ const getUserPdf = async (req, res, next) => {
     res.setHeader("Content-Type", "application/pdf");
     pdfStream.pipe(res);
     pdfStream.end();
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+//Get all posts for one user
+const getUsersPosts = async (req, res, next) => {
+  try {
+    const id = req.params.userId;
+    const posts = await UserModel.findOne({ _id: id }).populate("posts");
+    if (posts) {
+      res.send(posts);
+    } else {
+      next(createHttpError(404, `User with the ID: ${id} not found!`));
+    }
   } catch (error) {
     console.log(error);
     next(error);
@@ -118,8 +130,6 @@ const updateUsersById = async (req, res, next) => {
     next(error);
   }
 };
-
-
 
 const deleteUsersById = async (req, res, next) => {
   try {
@@ -437,10 +447,9 @@ const handler = {
   getEducationById, //Done  DRY
   updateEducationById, //DONE
   deleteEducationById,
-
+  getUsersPosts,
   getUserPdf, //in progress
 
   getExperienceAsCsvFile,
-
 };
 export default handler;

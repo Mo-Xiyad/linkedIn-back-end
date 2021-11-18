@@ -2,11 +2,10 @@ import express from "express";
 import handler from "./handlers.js";
 import UserModel from "./schema.js";
 import { userValidator } from "./validator.js";
-
+import mongoose from "mongoose";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
-
 
 // Initialize cloudinary for user upload images
 const cloudinaryStorageUsers = new CloudinaryStorage({
@@ -16,7 +15,29 @@ const cloudinaryStorageUsers = new CloudinaryStorage({
   },
 });
 
+// Initialize cloudinary for user background upload images
+const cloudinaryStorageUsersBackground = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "users_background_picture",
+  },
+});
 
+// Initialize cloudinary for Experience upload images
+const cloudinaryStorageExperience = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "experience_picture",
+  },
+});
+
+// Initialize cloudinary for Education upload images
+const cloudinaryStorageEducation = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "education_picture",
+  },
+});
 
 const router = express.Router();
 
@@ -29,7 +50,6 @@ router
   .get(handler.getUsers)
   .post(userValidator, handler.createUsers);
 
-
 router
   .route(`/:userId`)
   .get(handler.getUsersById)
@@ -40,6 +60,7 @@ router
   .post(handler.getEducation)
   .post(handler.createEducation);
 
+router.route(`/:userId/posts`).get(handler.getUsersPosts);
 
 router
   .route(`/:userId/experience`)
@@ -50,7 +71,6 @@ router
   .route(`/:userId/education`)
   .get(handler.getEducation)
   .post(handler.createEducation);
-
 
 //EXPERIENCE endpoints
 router
@@ -88,5 +108,70 @@ router.put(
   }
 );
 
+//ENDPOINT FOR Background Picture Upload
+router.put(
+  `/:userId/backgroundUpload`,
+  multer({ storage: cloudinaryStorageUsersBackground }).single("image"),
+  async (req, res, next) => {
+    try {
+      const newUserBackgroundImage = await UserModel.findByIdAndUpdate(
+        req.params.userId,
+        { ...req.body, backgroundImage: req.file.path },
+        { new: true }
+      );
+
+      res.status(201).send({ newUserBackgroundImage });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
+
+//ENDPOINT FOR Experience Picture Upload
+router.put(
+  `/:userId/experience/:experienceId/imageUpload`,
+  multer({ storage: cloudinaryStorageExperience }).single("image"),
+  async (req, res, next) => {
+    try {
+      await UserModel.updateOne(
+        {
+          _id: req.params.userId,
+          "experience._id": mongoose.Types.ObjectId(req.params.experienceId),
+        },
+        { "experience.$.image": req.file.path },
+        { new: true }
+      );
+      const user = await UserModel.findById(req.params.userId);
+      res.status(201).send({ user });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
+
+//ENDPOINT FOR Education Picture Upload
+router.put(
+  `/:userId/education/:educationId/imageUpload`,
+  multer({ storage: cloudinaryStorageEducation }).single("image"),
+  async (req, res, next) => {
+    try {
+      await UserModel.updateOne(
+        {
+          _id: req.params.userId,
+          "education._id": mongoose.Types.ObjectId(req.params.educationId),
+        },
+        { "education.$.image": req.file.path },
+        { new: true }
+      );
+      const user = await UserModel.findById(req.params.userId);
+      res.status(201).send({ user });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
 
 export default router;
