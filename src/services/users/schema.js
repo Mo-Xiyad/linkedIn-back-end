@@ -54,6 +54,13 @@ const UserSchema = new Schema(
     },
     image: {
       type: String,
+      default: "https://source.unsplash.com/1600x900/?portrait",
+    },
+    backgroundImage: {
+      type: String,
+      // required: true,
+      default: "https://source.unsplash.com/1600x900/?portrait",
+      // enum: ["https://source.unsplash.com/1600x900/?portrait"],
     },
     username: {
       type: String,
@@ -125,18 +132,21 @@ UserSchema.static("getInstance", async function (attr, params, body, attrId) {
       return false;
     }
 
-  //gets instance of education
-  } else if(user && attr === "education") {
+    //gets instance of education
+  } else if (user && attr === "education") {
     const foundInstance = user.education.find(
       (exp) => exp._id.toString() === attrId
     );
     console.log(foundInstance);
     if (foundInstance) {
       return foundInstance;
-  } else {return false} 
-  //RETURNS FALSE IF NEITHER EDUCATION OR EXPERIENCE
-}else {
+    } else {
+      return false;
+    }
+    //RETURNS FALSE IF NEITHER EDUCATION OR EXPERIENCE
+  } else {
     return false;
-  }});
+  }
+});
 
 export default model("User", UserSchema);
