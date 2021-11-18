@@ -2,7 +2,7 @@ import express from "express";
 import handler from "./handlers.js";
 import UserModel from "./schema.js";
 import { userValidator } from "./validator.js";
-
+import mongoose from "mongoose";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
@@ -28,6 +28,14 @@ const cloudinaryStorageExperience = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "experience_picture",
+  },
+});
+
+// Initialize cloudinary for Education upload images
+const cloudinaryStorageEducation = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "education_picture",
   },
 });
 
@@ -122,17 +130,43 @@ router.put(
 
 //ENDPOINT FOR Experience Picture Upload
 router.put(
-  `/:userId/experienceUpload`,
+  `/:userId/experience/:experienceId/imageUpload`,
   multer({ storage: cloudinaryStorageExperience }).single("image"),
   async (req, res, next) => {
     try {
-      const newUserExperienceImage = await UserModel.findByIdAndUpdate(
-        req.params.userId,
-        { ...req.body, backgroundImage: req.file.path },
+      await UserModel.updateOne(
+        {
+          _id: req.params.userId,
+          "experience._id": mongoose.Types.ObjectId(req.params.experienceId),
+        },
+        { "experience.$.image": req.file.path },
         { new: true }
       );
+      const user = await UserModel.findById(req.params.userId);
+      res.status(201).send({ user });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
 
-      res.status(201).send({ newUserExperienceImage });
+//ENDPOINT FOR Education Picture Upload
+router.put(
+  `/:userId/education/:educationId/imageUpload`,
+  multer({ storage: cloudinaryStorageEducation }).single("image"),
+  async (req, res, next) => {
+    try {
+      await UserModel.updateOne(
+        {
+          _id: req.params.userId,
+          "education._id": mongoose.Types.ObjectId(req.params.educationId),
+        },
+        { "education.$.image": req.file.path },
+        { new: true }
+      );
+      const user = await UserModel.findById(req.params.userId);
+      res.status(201).send({ user });
     } catch (error) {
       console.log(error);
       next(error);

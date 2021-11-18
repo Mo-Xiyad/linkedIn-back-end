@@ -1,5 +1,4 @@
 import UserModel from "./schema.js";
-import PostsModel from "./schema.js";
 
 import { generateUserPDF } from "../pdf/index.js";
 
@@ -54,9 +53,8 @@ const getUserPdf = async (req, res, next) => {
 const getUsersPosts = async (req, res, next) => {
   try {
     const id = req.params.userId;
-    const user = await UserModel.findById(id);
     const posts = await UserModel.findOne({ _id: id }).populate("posts");
-    if (user) {
+    if (posts) {
       res.send(posts);
     } else {
       next(createHttpError(404, `User with the ID: ${id} not found!`));
