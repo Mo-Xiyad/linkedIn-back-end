@@ -1,4 +1,5 @@
 import express from "express";
+import checkId from "../../middlewares/checkId.js";
 import handler from "./handlers.js";
 import UserModel from "./schema.js";
 import { userValidator } from "./validator.js";
@@ -19,7 +20,7 @@ router.route(`/:googleId/authorization`).get(handler.checkFotAuthorizedUser);
 
 router
   .route(`/:userId/experience`)
-  .get(handler.getExperience)
+  .get(checkId, handler.getExperience)
   .post(handler.createExperience);
 
 router

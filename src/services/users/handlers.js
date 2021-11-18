@@ -60,29 +60,49 @@ const getUsersById = async (req, res, next) => {
     next(error);
   }
 };
-const checkFotAuthorizedUser = async (req, res, next) => {
+
+//******************************* Google Authenticator *******************************
+const createGoogleUser = async (user) => {
   try {
-    const id = req.params.googleId;
-    if (id) {
-      const foundUser = await UserModel.find({
-        google_id: id,
-      });
-      if (foundUser.length > 0) {
-        res.send({ foundUser });
-      } else {
-        res.sendStatus(404);
-        // next(createHttpError(404, `User not found!`));
-      }
+    const newUser = {
+      google_id: user.sub,
+      name: user.given_name,
+      surname: user.family_name,
+      email: user.email,
+      image: user.picture,
+      username: user.name,
+    };
+
+    if (user) {
+      const createNewUser = new UserModel(newUser);
+
+      const user = await createNewUser.save();
+
+      return user;
     } else {
-      // res.status(404).send(false);
-      res.sendStatus(404);
-      // next(createHttpError(404, `User not found!`));
+      return `user could not be created`;
     }
   } catch (error) {
     console.log(error);
-    next(error);
   }
 };
+
+const checkFotAuthorizedUser = async (id) => {
+  try {
+    if (id) {
+      const foundUser = await UserModel.findOne({
+        google_id: id,
+      });
+      return foundUser;
+    } else {
+      throw new Error("Id needed parameter");
+    }
+  } catch (error) {
+    throw new Error("cant find user");
+  }
+};
+
+//******************************* END Google Authenticator *******************************
 
 //UPDATES A SINGLE USER
 const updateUsersById = async (req, res, next) => {
@@ -390,5 +410,6 @@ const handler = {
   updateEducationById, //DONE
   deleteEducationById,
   checkFotAuthorizedUser,
+  createGoogleUser,
 };
 export default handler;

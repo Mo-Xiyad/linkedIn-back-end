@@ -2,25 +2,50 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
+import passport from "passport";
+import p from "./passport/index.js";
 import {
   badRequestHandler,
   unauthorizedHandler,
   notFoundHandler,
   genericErrorHandler,
 } from "./errorHandlers.js";
+
 import UsersRouter from "./services/users/index.js";
 import PostsRouter from "./services/posts/index.js";
-
+import cookieParser from "cookie-parser";
 const { MONGO_CONNECTION, PORT } = process.env;
 
 const server = express();
 const port = process.env.PORT || 5001;
 
 // ******************************** MIDDLEWARE ********************************
+
+server.use(cookieParser());
+server.use(passport.initialize());
+
 server.use(cors());
 server.use(express.json());
 
 // ******************************** ROUTES ********************************
+server.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["email", "profile"],
+  })
+);
+server.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "http://localhost:3000/login",
+  }),
+
+  function (req, res) {
+    console.log(req.user);
+    res.cookie("user_id", req.user._id.toString());
+    res.redirect("http://localhost:3000/home/");
+  }
+);
 
 server.use("/users", UsersRouter);
 server.use("/posts", PostsRouter);
