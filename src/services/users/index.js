@@ -42,7 +42,7 @@ const cloudinaryStorageEducation = new CloudinaryStorage({
 const router = express.Router();
 
 router.route(`/`).get(handler.getUsers).post(handler.createUsers);
-
+//ENDPOINT FOR PDF FILE
 router.route(`/:userId/pdf`).get(handler.getUserPdf);
 
 router
