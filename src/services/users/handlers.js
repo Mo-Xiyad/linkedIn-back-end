@@ -60,6 +60,29 @@ const getUsersById = async (req, res, next) => {
     next(error);
   }
 };
+const checkFotAuthorizedUser = async (req, res, next) => {
+  try {
+    const id = req.params.googleId;
+    if (id) {
+      const foundUser = await UserModel.find({
+        google_id: id,
+      });
+      if (foundUser.length > 0) {
+        res.send({ foundUser });
+      } else {
+        res.sendStatus(404);
+        // next(createHttpError(404, `User not found!`));
+      }
+    } else {
+      // res.status(404).send(false);
+      res.sendStatus(404);
+      // next(createHttpError(404, `User not found!`));
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 
 //UPDATES A SINGLE USER
 const updateUsersById = async (req, res, next) => {
@@ -120,9 +143,13 @@ const getExperience = async (req, res, next) => {
 const createExperience = async (req, res, next) => {
   try {
     const id = req.params.userId;
-    const addExperience = await UserModel.createInstance("experience", req.params, req.body);
-    if(addExperience){
-      console.log(addExperience)
+    const addExperience = await UserModel.createInstance(
+      "experience",
+      req.params,
+      req.body
+    );
+    if (addExperience) {
+      console.log(addExperience);
       res.send(addExperience);
     } else {
       next(createHttpError(404, `User with the ID: ${id} not found!`));
@@ -133,18 +160,27 @@ const createExperience = async (req, res, next) => {
   }
 };
 
-
 //GETS A SPECIFIC EXPERIENCE
 const getExperienceById = async (req, res, next) => {
   try {
     const userId = req.params.userId;
     const experienceId = req.params.experienceId;
-    const findExperience = await UserModel.getInstance("experience", req.params, req.body, experienceId);
+    const findExperience = await UserModel.getInstance(
+      "experience",
+      req.params,
+      req.body,
+      experienceId
+    );
 
     if (findExperience) {
       res.send(findExperience);
     } else {
-      next(createHttpError(404, `Instance of Exerience or User with the ID:  ${id} not found!`));
+      next(
+        createHttpError(
+          404,
+          `Instance of Exerience or User with the ID:  ${id} not found!`
+        )
+      );
     }
   } catch (error) {
     console.log(error);
@@ -235,9 +271,13 @@ const createEducation = async (req, res, next) => {
   try {
     const id = req.params.userId;
     const user = await UserModel.findById(id);
-    const addEducation = await UserModel.createInstance("education", req.params, req.body);
-    if(addEducation){
-      console.log(addEducation)
+    const addEducation = await UserModel.createInstance(
+      "education",
+      req.params,
+      req.body
+    );
+    if (addEducation) {
+      console.log(addEducation);
       res.send(addEducation);
     } else {
       next(createHttpError(404, `User with the ID: ${id} not found!`));
@@ -250,21 +290,31 @@ const createEducation = async (req, res, next) => {
 
 //GETS A SPECIFIC INSTANCE OF EDUCATION
 const getEducationById = async (req, res, next) => {
-    try {
-      const userId = req.params.userId;
-      const educationId = req.params.educationId;
-      const findEducation = await UserModel.getInstance("education", req.params, req.body, educationId);
-  
-      if (findEducation) {
-        res.send(findEducation);
-      } else {
-        next(createHttpError(404, `Instance of Education or User with the ID:  ${id} not found!`));
-      }
-    } catch (error) {
-      console.log(error);
-      next(error);
+  try {
+    const userId = req.params.userId;
+    const educationId = req.params.educationId;
+    const findEducation = await UserModel.getInstance(
+      "education",
+      req.params,
+      req.body,
+      educationId
+    );
+
+    if (findEducation) {
+      res.send(findEducation);
+    } else {
+      next(
+        createHttpError(
+          404,
+          `Instance of Education or User with the ID:  ${id} not found!`
+        )
+      );
     }
-  };
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 
 //UPDATES AN INSTANCE OF EDUCATION BY ID
 
@@ -339,5 +389,6 @@ const handler = {
   getEducationById, //Done  DRY
   updateEducationById, //DONE
   deleteEducationById,
+  checkFotAuthorizedUser,
 };
 export default handler;

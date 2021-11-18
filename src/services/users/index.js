@@ -14,6 +14,9 @@ router
   .put(handler.updateUsersById)
   .delete(handler.deleteUsersById);
 
+// this endpoint is checking if the google user exists
+router.route(`/:googleId/authorization`).get(handler.checkFotAuthorizedUser);
+
 router
   .route(`/:userId/experience`)
   .get(handler.getExperience)

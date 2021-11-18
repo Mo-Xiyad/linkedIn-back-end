@@ -14,7 +14,7 @@ import PostsRouter from "./services/posts/index.js";
 const { MONGO_CONNECTION, PORT } = process.env;
 
 const server = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 5001;
 
 // ******************************** MIDDLEWARE ********************************
 server.use(cors());
