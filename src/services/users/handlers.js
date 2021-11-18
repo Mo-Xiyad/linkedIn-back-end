@@ -54,12 +54,8 @@ const getUserPdf = async (req, res, next) => {
 const getUsersPosts = async (req, res, next) => {
   try {
     const id = req.params.userId;
-
     const user = await UserModel.findById(id);
-    const posts = await UserModel.findOne({_id:id}).populate("posts")
-    /* const postFromUser = await posts.find({user:id}) */
-    console.log(posts);
-    console.log(user);
+    const posts = await UserModel.findOne({ _id: id }).populate("posts");
     if (user) {
       res.send(posts);
     } else {
