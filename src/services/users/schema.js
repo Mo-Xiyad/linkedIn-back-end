@@ -2,41 +2,12 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-/* THE USER MODEL LOOKS LIKE THIS 
-    {
-        "_id": "5d84937322b7b54d848eb41b", //server generated
-        "name": "Diego", //REQUIRED
-        "surname": "Banovaz", //REQUIRED
-        "email": "diego@strive.school", //REQUIRED
-        "bio": "SW ENG",
-        "title": "COO @ Strive School",
-        "area": "Berlin",
-        "image": ..., //server generated on upload, set a default here
-        "username": "admin", //REQUIRED
-        "createdAt": "2019-09-20T08:53:07.094Z", //server generated
-        "updatedAt": "2019-09-20T09:00:46.977Z", //server generated
-    }
-*/
-
-/* An instance of EXPERIENCE : 
-
-    {
-        "_id": "5d925e677360c41e0046d1f5",  //server generated
-        "role": "CTO",
-        "company": "Strive School",
-        "startDate": "2019-06-16T22:00:00.000Z",
-        "endDate": "2019-06-16T22:00:00.000Z", //could be null
-        "description": "Doing stuff here and there",
-        "area": "Berlin",
-        "username": "admin",
-        "createdAt": "2019-09-30T19:58:31.019Z",  //server generated
-        "updatedAt": "2019-09-30T19:58:31.019Z",  //server generated
-        "image": ... //server generated on upload, set a default here
-    }
-
-*/
 const UserSchema = new Schema(
   {
+    google_id: {
+      type: String,
+      // required: true,
+    },
     name: {
       type: String,
       // required: true,
@@ -62,9 +33,11 @@ const UserSchema = new Schema(
       default: "https://source.unsplash.com/1600x900/?portrait",
       // enum: ["https://source.unsplash.com/1600x900/?portrait"],
     },
+    background_image: {
+      type: String,
+    },
     username: {
       type: String,
-      required: true,
     },
     experience: [
       {
