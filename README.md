@@ -1,4 +1,4 @@
 # linkedIn-back-end
 
 # check out out live demo
--[] https://linkedin-clone-aug.herokuapp.com/
+<a href="https://linkedin-clone-aug.herokuapp.com/"> HERE </a>
