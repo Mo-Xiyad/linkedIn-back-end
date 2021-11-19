@@ -112,6 +112,49 @@ const getUsersById = async (req, res, next) => {
   }
 };
 
+//******************************* Google Authenticator *******************************
+const createGoogleUser = async (user) => {
+  try {
+    const newUser = {
+      google_id: user.sub,
+      name: user.given_name,
+      surname: user.family_name,
+      email: user.email,
+      image: user.picture,
+      username: user.name,
+    };
+
+    if (user) {
+      const createNewUser = new UserModel(newUser);
+
+      const user = await createNewUser.save();
+
+      return user;
+    } else {
+      return `user could not be created`;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const checkFotAuthorizedUser = async (id) => {
+  try {
+    if (id) {
+      const foundUser = await UserModel.findOne({
+        google_id: id,
+      });
+      return foundUser;
+    } else {
+      throw new Error("Id needed parameter");
+    }
+  } catch (error) {
+    throw new Error("cant find user");
+  }
+};
+
+//******************************* END Google Authenticator *******************************
+
 //UPDATES A SINGLE USER
 const updateUsersById = async (req, res, next) => {
   try {
@@ -451,5 +494,7 @@ const handler = {
   getUserPdf, //in progress
 
   getExperienceAsCsvFile,
+  checkFotAuthorizedUser,
+  createGoogleUser,
 };
 export default handler;
