@@ -52,8 +52,12 @@ server.get(
 
   function (req, res) {
     console.log(req.user);
-    res.cookie("user_id", req.user._id.toString());
-    res.redirect("http://localhost:3000/home/");
+    res.cookie("user_id", req.user._id.toString(), {
+      path: "/",
+      httpOnly: true,
+      secure: true,
+    });
+    res.redirect("http://localhost:3000/home");
   }
 );
 
