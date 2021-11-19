@@ -60,6 +60,7 @@ server.get(
     console.log(req.user);
     res.cookie("user_id", req.user._id.toString(), {
       path: "/",
+      httpOnly: false,
       secure: true,
       sameSite: "none",
     });
