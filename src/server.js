@@ -58,8 +58,8 @@ server.get(
   function (req, res) {
     console.log(req.user);
     res.cookie("user_id", req.user._id.toString(), {
+      path: "/",
       secure: true,
-      httpOnly: false,
       sameSite: "none",
     });
     res.redirect("https://linkedin-clone-aug.herokuapp.com/home");
