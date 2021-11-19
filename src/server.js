@@ -66,13 +66,15 @@ server.get(
 
   function (req, res) {
     console.log(req.user);
-    res.cookie("user_id", req.user._id.toString(), {
-      path: "/",
-      httpOnly: false,
-      secure: true,
-      sameSite: "none",
-    });
-    res.redirect("https://linkedin-clone-aug.herokuapp.com/home");
+    // res.cookie("user_id", req.user._id.toString(), {
+    //   path: "/",
+    //   httpOnly: false,
+    //   secure: true,
+    //   sameSite: "none",
+    // });
+    res.redirect(
+      `https://linkedin-clone-aug.herokuapp.com/home?id=${req.user._id.toString()}`
+    );
   }
 );
 

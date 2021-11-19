@@ -20,6 +20,7 @@ passport.use(
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET_KEY,
       callbackURL: GOOGLE_CALLBACK_URL,
+      proxy: true,
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, done) {
