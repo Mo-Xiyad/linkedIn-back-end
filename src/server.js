@@ -33,7 +33,12 @@ const corsOptions = {
 };
 
 // ******************************** MIDDLEWARE ********************************
-server.use(cors(corsOptions));
+server.use(
+  cors({
+    origin: "https://linkedin-clone-aug.herokuapp.com",
+    credentials: true,
+  })
+);
 server.use(cookieParser());
 server.use(passport.initialize());
 server.use(express.json());
