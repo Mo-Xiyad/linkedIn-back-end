@@ -111,22 +111,23 @@ const deletePostsById = async (req, res, next) => {
 const likePost = async (req, res, next) => {
   try {
     const id = req.params.postId;
+    const userId = req.params.userId
     const post = await PostModel.findById(id);
     if (post) {
       const liked = await PostModel.findOne({
         _id: id,
-        likes: new mongoose.Types.ObjectId(req.body.userId),
+        likes: new mongoose.Types.ObjectId(userId),
       });
       if (!liked) {
         await PostModel.findByIdAndUpdate(
           id,
-          { $push: { likes: req.body.userId } },
+          { $push: { likes: userId } },
           { new: true }
         );
       } else {
         await PostModel.findByIdAndUpdate(
           id,
-          { $pull: { likes: req.body.userId } },
+          { $pull: { likes: userId } },
           { new: true }
         );
       }

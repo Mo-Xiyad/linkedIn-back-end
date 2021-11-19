@@ -22,7 +22,7 @@ const router = express.Router();
 router.route(`/`).get(handler.getPosts).post(postCheck, handler.createPosts);
 
 // LIKES
-router.route("/:postId/likes").put(handler.likePost);
+router.route("/:postId/likes/:userId").put(handler.likePost);
 
 router
   .route(`/:postId`)
