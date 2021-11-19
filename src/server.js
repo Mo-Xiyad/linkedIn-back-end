@@ -60,7 +60,7 @@ server.get(
     res.cookie("user_id", req.user._id.toString(), {
       secure: true,
       httpOnly: false,
-      path: "/home",
+      sameSite: "none",
     });
     res.redirect("https://linkedin-clone-aug.herokuapp.com/home");
   }
