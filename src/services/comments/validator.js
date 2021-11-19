@@ -5,7 +5,7 @@ export const commentsValidator = [
   body("comment").isLength({ min: 2 }).withMessage("Comment is too sort "),
   body("comment").isLength({ max: 300 }).withMessage("Comment is too long "),
   body("user").exists().withMessage("User Id is required "),
-  body("post").exists().withMessage("Post Id is required "),
+  // body("post").exists().withMessage("Post Id is required "),
 ];
 
 /* 
