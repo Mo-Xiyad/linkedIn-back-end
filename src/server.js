@@ -37,6 +37,14 @@ server.use(
   cors({
     origin: "https://linkedin-clone-aug.herokuapp.com",
     credentials: true,
+    allowedHeaders: [
+      "Content-Type",
+      "Accept",
+      "Origin",
+      "X-Requested-With",
+      "Authorization",
+      "Set-Cookie",
+    ],
   })
 );
 server.use(cookieParser());
