@@ -13,8 +13,8 @@ const commentArray = new Schema(
 // **************************************************************
 const postSchema = new Schema(
   {
-    text: { type: String },
-    username: { type: String, default: "admin" },
+    text: { type: String, required: true },
+    username: { type: String, default: "Admin"},
     user: {
       type: Schema.Types.ObjectId,
       required: true,
@@ -22,7 +22,7 @@ const postSchema = new Schema(
     },
     image: {
       type: String,
-      required: true,
+      // required: true,
       default: "https://source.unsplash.com/1600x900/?portrait",
       // enum: ["https://source.unsplash.com/1600x900/?portrait"],
     },
