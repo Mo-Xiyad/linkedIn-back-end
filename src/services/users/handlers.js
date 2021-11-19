@@ -53,9 +53,9 @@ const getUserPdf = async (req, res, next) => {
 const getUsersPosts = async (req, res, next) => {
   try {
     const id = req.params.userId;
-    const posts = await UserModel.findOne({ _id: id }).populate("posts");
-    if (posts) {
-      res.send(posts);
+    const user = await UserModel.findOne({ _id: id }).populate("posts");
+    if (user) {
+      res.send(user.posts);
     } else {
       next(createHttpError(404, `User with the ID: ${id} not found!`));
     }

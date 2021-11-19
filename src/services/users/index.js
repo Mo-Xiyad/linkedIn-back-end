@@ -60,6 +60,9 @@ router
   .post(handler.getEducation)
   .post(handler.createEducation);
 
+
+  //gets all the posts from a single user 
+
 router.route(`/:userId/posts`).get(handler.getUsersPosts);
 
 router
