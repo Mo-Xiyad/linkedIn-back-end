@@ -19,7 +19,11 @@ const { MONGO_CONNECTION, PORT } = process.env;
 const server = express();
 const port = process.env.PORT || 3001;
 
-const whitelist = [process.env.FE_URL, process.env.FE_DEV_URL];
+const whitelist = [
+  process.env.FE_URL,
+  process.env.FE_DEV_URL,
+  "https://linkedin-clone-aug.herokuapp.com/",
+];
 
 const corsOptions = {
   origin: function (origin, next) {
@@ -29,10 +33,11 @@ const corsOptions = {
       next(new Error("CROSS ORIGIN ERROR"));
     }
   },
+  credentials: true,
 };
 
 // ******************************** MIDDLEWARE ********************************
-server.use(cors());
+server.use(cors(corsOptions));
 server.use(cookieParser());
 server.use(passport.initialize());
 server.use(express.json());
