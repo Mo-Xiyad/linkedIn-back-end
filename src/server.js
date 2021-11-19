@@ -53,7 +53,7 @@ server.get(
 server.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "hhttps://linkedin-clone-aug.herokuapp.com/login",
+    failureRedirect: "hhttps://linkedin-clone-aug.herokuapp.com",
   }),
 
   function (req, res) {
